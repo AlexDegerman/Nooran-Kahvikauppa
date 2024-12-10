@@ -1,6 +1,7 @@
 import './App.css'
 import Header from './components/Header'
 import FrontPage from './components/FrontPage'
+import { Route, Routes } from 'react-router-dom'
 
 const App = () => {
 
@@ -8,7 +9,9 @@ const App = () => {
   return (
     <>
       <Header/>
-      <FrontPage/>
+      <Routes>
+        <Route path="/" element= {<FrontPage/>}/>
+      </Routes>
     </>
   )
 }
