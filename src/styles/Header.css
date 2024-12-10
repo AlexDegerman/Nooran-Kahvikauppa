@@ -6,12 +6,15 @@ header {
   left: 0;
   width: 100%;
   z-index: 1000;
+  padding-left: 10px;
 }
+
 .header-title {
   margin-right: auto;
 }
 
 .header-nav-container {
   display: flex;
-  gap: 20px; 
+  gap: 30px; 
+  padding-right: 40px;
 }

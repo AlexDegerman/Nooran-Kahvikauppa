@@ -8,7 +8,7 @@ const Header = () => {
       <div className="header-nav-container">
         <p className="header-nav">Etusivu</p>
         <p className="header-nav">Kahvilaitteet</p>
-        <p className="header-nav">Kulutus laitteet</p>
+        <p className="header-nav">Kulutuslaitteet</p>
       </div>
     </header>
   )
