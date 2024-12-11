@@ -11,15 +11,29 @@ header {
 
 .header-title {
   margin-right: auto;
+  color: white;
+  text-decoration: none;
 }
 
 .header-nav-container {
   display: flex;
   gap: 30px; 
   padding-right: 40px;
+  align-items: center;
+  justify-content: center;
 }
 
 .header-nav.active {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.header-nav-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  text-decoration: underline;
+  color:#5185fd;
+  cursor: pointer;
 }
