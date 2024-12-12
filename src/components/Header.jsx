@@ -3,6 +3,7 @@ import '../styles/Header.css'
 
 const Header = () => {
   const navigate = useNavigate()
+  const userId = 1
 
   const handleClick = (category) => {
     navigate('/tuotelista', { state: { category } })
@@ -12,6 +13,12 @@ const Header = () => {
     <header>
       <Link to="/"className="header-title"><h2>Nooran Kahvikauppa</h2></Link>
       <nav className="header-nav-container">
+        {/*Display Admin button to Noora*/}
+      {userId === 1 ? (
+      <Link to="/admin" className="header-nav-admin">
+        <p>Admin</p>
+      </Link>
+    ) : null}
         <NavLink to="/" className="header-nav"><p>Etusivu</p></NavLink>
         <button className="header-nav header-nav-button" 
           onClick={() => handleClick('Kahvilaitteet')}>
