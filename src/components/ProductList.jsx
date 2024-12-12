@@ -11,49 +11,86 @@ const ProductList = () => {
   const location = useLocation()
   const { category } = location.state || {}
 
-    const products = [
-      {
-        imagePath: product1,
-        cost: 19.99,
-        name: "Product One",
-        availability: "In Stock",
-        deliveryDate: "1-2 työpäivää",
-      },
-      {
-        imagePath: product2,
-        cost: 29.99,
-        name: "Product Two",
-        availability: "Out of Stock",
-        deliveryDate: "1-2 työpäivää",
-      },
-      {
-        imagePath: product3,
-        cost: 9.99,
-        name: "Product Three",
-        availability: "In Stock",
-        deliveryDate: "1-2 työpäivää",
-      },
-      {
-        imagePath: product4,
-        cost: 49.99,
-        name: "Product Four",
-        availability: "Limited Stock",
-        deliveryDate: "1-2 työpäivää",
-      },
-      {
-        imagePath: product5,
-        cost: 15.99,
-        name: "Product Five",
-        availability: "In Stock",
-        deliveryDate: "1-2 työpäivää",
-      }
-    ]
+  const kahvilaitteet = [
+    {
+      imagePath: product1,
+      cost: 19.99,
+      name: "Kahvilaite 1",
+      availability: "In Stock",
+      deliveryDate: "1-2 työpäivää",
+    },
+    {
+      imagePath: product2,
+      cost: 29.99,
+      name: "Kahvilaite 2",
+      availability: "Out of Stock",
+      deliveryDate: "1-2 työpäivää",
+    },
+    {
+      imagePath: product3,
+      cost: 9.99,
+      name: "Kahvilaite 3",
+      availability: "In Stock",
+      deliveryDate: "1-2 työpäivää",
+    },
+    {
+      imagePath: product4,
+      cost: 49.99,
+      name: "Kahvilaite 4",
+      availability: "Limited Stock",
+      deliveryDate: "1-2 työpäivää",
+    },
+    {
+      imagePath: product5,
+      cost: 15.99,
+      name: "Kahvilaite 5",
+      availability: "In Stock",
+      deliveryDate: "1-2 työpäivää",
+    }
+  ]
+  const kulutuslaitteet = [
+    {
+      imagePath: product1,
+      cost: 19.99,
+      name: "Kulutuslaite 1",
+      availability: "In Stock",
+      deliveryDate: "1-2 työpäivää",
+    },
+    {
+      imagePath: product2,
+      cost: 29.99,
+      name: "Kulutuslaite 2",
+      availability: "Out of Stock",
+      deliveryDate: "1-2 työpäivää",
+    },
+    {
+      imagePath: product3,
+      cost: 9.99,
+      name: "Kulutuslaite 3",
+      availability: "In Stock",
+      deliveryDate: "1-2 työpäivää",
+    },
+    {
+      imagePath: product4,
+      cost: 49.99,
+      name: "Kulutuslaite 4",
+      availability: "Limited Stock",
+      deliveryDate: "1-2 työpäivää",
+    },
+    {
+      imagePath: product5,
+      cost: 15.99,
+      name: "Kulutuslaite 5",
+      availability: "In Stock",
+      deliveryDate: "1-2 työpäivää",
+    }
+  ]
 
     return (
       <div className="main-content"> 
         <h1>{category}</h1>
         <ul className="product-list">
-          {products.map((product, index) => (
+          {(category === 'Kulutuslaitteet' ? kulutuslaitteet : kahvilaitteet).map((product, index) => (
             <div key={index} className="product-card">
               <img className="product-card-image" src={product.imagePath} alt={product.name}/>
               <ul className="product-details">
