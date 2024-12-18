@@ -6,8 +6,18 @@ const Header = () => {
   const userId = 1
 
   const handleClick = (category) => {
-    navigate('/tuotelista', { state: { category } })
+    let categoryId = 0
+  
+    if (category === 'Kahvilaitteet') {
+      categoryId = 1
+    }
+    if (category === 'Kulutuslaitteet') {
+      categoryId = 2
+    }
+  
+    navigate('/tuotelista', { state: { category, categoryId }})
   }
+  
 
   return (
     <header>
