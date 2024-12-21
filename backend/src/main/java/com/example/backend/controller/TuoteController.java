@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,5 +24,12 @@ public class TuoteController {
   public ResponseEntity<List<Tuote>> getProductsByMainCategory(@PathVariable Long mainCategoryId) {
     List<Tuote> products = tuoteService.getProductsByMainCategory(mainCategoryId);
     return ResponseEntity.ok(products);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Tuote> getProductById(@PathVariable Long id) {
+    Optional<Tuote> product = tuoteService.getProductById(id);
+    return product.map(ResponseEntity::ok)
+                  .orElse(ResponseEntity.notFound().build());
   }
 }

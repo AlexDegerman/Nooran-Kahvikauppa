@@ -1,0 +1,23 @@
+.product-page-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center; 
+}
+.product-container {
+  background-color: #1C1C1C;
+  width: 50%;
+}
+
+.product-details {
+  margin-top: 20px;
+  display: flex;
+  margin-left: 200px;
+
+}

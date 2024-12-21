@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,4 +18,10 @@ public class TuoteService {
   public List<Tuote> getProductsByMainCategory(Long osastoId) {
     return tuoteRepository.findByOsastoId(osastoId);
   }
+  // Fetch a specific product with id
+  public Optional<Tuote> getProductById(Long id) {
+    return tuoteRepository.findById(id);
+  }
+
+  
 }

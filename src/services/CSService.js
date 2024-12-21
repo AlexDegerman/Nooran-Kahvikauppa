@@ -6,4 +6,8 @@ const getProductsByMainCategory = (mainCategoryId) => {
   return axios.get(`${baseUrl}` + '/api/tuotteet/paakategoria/' + mainCategoryId)
 }
 
-export default {getProductsByMainCategory}
+const getProductById = (productId) => {
+  return axios.get(`${baseUrl}`+ '/api/tuotteet/' + productId)
+}
+
+export default {getProductsByMainCategory, getProductById}

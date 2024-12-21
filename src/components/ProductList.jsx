@@ -1,7 +1,7 @@
 import '../styles/ProductList.css'
 import { Circle, ShoppingCart, Star, StarHalf } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import CSService from '../services/CSService'
 
 const ProductList = () => {
@@ -12,18 +12,25 @@ const ProductList = () => {
 
   useEffect(() => {
     setProducts([])
-    const loadProducts = () => {
-      CSService.getProductsByMainCategory(categoryId)
-        .then(response => {
-          setProducts(response.data)
-          setLoading(false)
-        })
+    const loadProducts = async () => {
+      try {
+        const response = await CSService.getProductsByMainCategory(categoryId)
+        setProducts(response.data)
+      } catch (error) {
+        console.error("Error loading products:", error)
+      } finally {
+        setLoading(false)
+      }
     }
     loadProducts()
-  }, [categoryId, category]) 
-
+  }, [categoryId, category])
+  
+  // Temporary returns while products load or products are not found
   if (loading) {
-    return <div className="loading">Loading products...</div>
+    return <div className="loading">Loading product...</div>
+  }
+  if (!products || Object.keys(products).length === 0) {
+    return <div className="loading">Products not found</div>
   }
 
     return (
@@ -32,16 +39,16 @@ const ProductList = () => {
         <ul className="product-list">
           {products.map((product, index) => (
             <div key={index} className="product-card">
-              <img className="product-card-image" src={product.tuotekuvalinkki} alt={product.nimi}/>
+              <Link className="product-card-image" to={`/product/${product.id}`}><img src={product.tuotekuvalinkki} alt={product.nimi}/></Link>
               <ul className="product-details">
                 <li className="product-card-detail-value">
                     <span className="product-card-price">${product.hinta}</span><ShoppingCart className="shopping-cart"/>
                 </li>
                 <li className="product-card-detail-value">
-                  {product.nimi}
+                <Link className="product-card-link" to={`/product/${product.id}`}>{product.nimi}</Link>
                 </li>
                 <li className="product-card-detail-value">
-                <Circle size="10px" className="product-card-circle" /> {product.deliveryDate}
+                <Circle size="10px" className="product-card-circle" /> 1-2 työpäivää
                 </li>
                 <li className="product-card-detail-value">
                   <Star size="15px" className="star"/><Star size="15px" className="star"/><Star size="15px" className="star"/><StarHalf size="15px" className="star"/>
