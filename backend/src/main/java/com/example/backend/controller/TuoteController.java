@@ -7,11 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.TuoteDTO;
 import com.example.backend.model.Tuote;
 import com.example.backend.service.TuoteService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/tuotteet")
@@ -21,8 +26,8 @@ public class TuoteController {
   private TuoteService tuoteService;
 
   @GetMapping("/paakategoria/{mainCategoryId}")
-  public ResponseEntity<List<Tuote>> getProductsByMainCategory(@PathVariable Long mainCategoryId) {
-    List<Tuote> products = tuoteService.getProductsByMainCategory(mainCategoryId);
+  public ResponseEntity<List<Tuote>> getProductsUnderMainCategory(@PathVariable Long mainCategoryId) {
+    List<Tuote> products = tuoteService.getProductsUnderMainCategory(mainCategoryId);
     return ResponseEntity.ok(products);
   }
 
@@ -32,4 +37,14 @@ public class TuoteController {
     return product.map(ResponseEntity::ok)
                   .orElse(ResponseEntity.notFound().build());
   }
+
+@PostMapping
+public ResponseEntity<?> createTuote(@RequestBody @Valid TuoteDTO tuoteDTO) {
+    try {
+        Tuote tuote = tuoteService.addTuote(tuoteDTO);
+        return ResponseEntity.ok(tuote);
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+}
 }

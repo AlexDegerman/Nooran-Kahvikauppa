@@ -12,12 +12,18 @@
 }
 .product-container {
   background-color: #1C1C1C;
-  width: 50%;
+  width: 500px;
 }
 
 .product-details {
   margin-top: 20px;
   display: flex;
-  margin-left: 200px;
-
+  flex-direction: column;
 }
+.product-card-image {
+  max-height: 400px;
+  display: flex;
+  align-items: center;
+}
+
+

@@ -40,7 +40,7 @@ const ProductList = () => {
           {products.map((product, index) => (
             <div key={index} className="product-card">
               <Link className="product-card-image" to={`/product/${product.id}`}><img src={product.tuotekuvalinkki} alt={product.nimi}/></Link>
-              <ul className="product-details">
+              <ul className="product-list-details">
                 <li className="product-card-detail-value">
                     <span className="product-card-price">${product.hinta}</span><ShoppingCart className="shopping-cart"/>
                 </li>

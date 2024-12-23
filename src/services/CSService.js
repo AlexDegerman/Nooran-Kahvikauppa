@@ -10,4 +10,19 @@ const getProductById = (productId) => {
   return axios.get(`${baseUrl}`+ '/api/tuotteet/' + productId)
 }
 
-export default {getProductsByMainCategory, getProductById}
+const getAllOsastot = () => {
+  return axios.get(`${baseUrl}/api/osastot`)
+}
+
+const getAllToimittajat = () => {
+  return axios.get(`${baseUrl}/api/toimittajat`)
+}
+
+const getAllValmistajat = () => {
+  return axios.get(`${baseUrl}/api/valmistajat`)
+}
+
+const addProduct = (product) => {
+  return axios.post(`${baseUrl}/api/tuotteet`, product)
+}
+export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllToimittajat, getAllValmistajat, addProduct}

@@ -20,14 +20,10 @@
 
 .product-card {
   background-color: #1C1C1C;
-  border-radius: 5px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
   overflow: hidden;
-  width: 100%;
-  padding-bottom: 40px;
+  height: 350px;
 }
 
 .product-card-link {
@@ -35,23 +31,24 @@
   text-decoration: none;
   cursor: pointer;
 }
-
-.product-card-image {
+.product-card-image img {
   width: 100%;
-  height: 200px;
+  height: 100%;
+  object-fit: cover;
+}
+.product-card-image {
+  overflow: hidden;
 }
 
-.product-details {
-  width: 100%;
-  list-style-type: none;
+
+.product-list-details {
   padding: 15px 10px;
-  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 5px;
   text-align: left; 
-  margin-left: 20px;
 }
+
 
 .product-card-detail-value {
   color: #ffffff;

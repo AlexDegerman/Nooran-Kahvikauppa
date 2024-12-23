@@ -2,8 +2,10 @@ package com.example.backend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "Osasto")
 public class Osasto {

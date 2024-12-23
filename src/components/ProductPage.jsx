@@ -39,7 +39,9 @@ const ProductPage = () => {
       <div className="product-container">
         <div className="product-title-container">
           <h1 className="product-title">{product.nimi}</h1>
-          <img src={product.tuotekuvalinkki} alt="Product Image"/>
+          <div className="product-card-image">
+            <img src={product.tuotekuvalinkki} alt="Product Image" />
+          </div>
         </div>
         <div className="product-details">
           <p>Hinta: {product.hinta}€</p>
@@ -47,7 +49,11 @@ const ProductPage = () => {
         </div>
       </div>
     </div>
-  )
+  );
+  
+  
+  
+  
 }
 
 export default ProductPage
