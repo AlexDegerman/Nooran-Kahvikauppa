@@ -6,6 +6,7 @@ export const DatabaseProvider = ({ children }) => {
   const [osastot, setOsastot] = useState([])
   const [valmistajat, setValmistajat] = useState([])
   const [toimittajat, setToimittajat] = useState([])
+  const [tuotteet, setTuotteet] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState()
 
@@ -13,15 +14,17 @@ export const DatabaseProvider = ({ children }) => {
     const fetchAllData = async () => {
       try {
         setLoading(true)
-        const [osastotRes, valmistajatRes, toimittajatRes] = await Promise.all([
+        const [osastotRes, valmistajatRes, toimittajatRes, tuotteetRes] = await Promise.all([
           CSService.getAllOsastot(),
           CSService.getAllValmistajat(),
-          CSService.getAllToimittajat()
+          CSService.getAllToimittajat(),
+          CSService.getAllProducts()
         ])
 
         setOsastot(osastotRes.data)
         setValmistajat(valmistajatRes.data)
         setToimittajat(toimittajatRes.data)
+        setTuotteet(tuotteetRes.data)
       } catch (error) {
         setError(error)
       } finally {
@@ -36,6 +39,7 @@ export const DatabaseProvider = ({ children }) => {
     osastot,
     valmistajat,
     toimittajat,
+    tuotteet,
     loading,
     error
   }

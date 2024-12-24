@@ -1,12 +1,14 @@
 // ProductManager.jsx
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../styles/ProductManager.css'
 import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 
 const ProductManager = () => {
-  const { valmistajat, toimittajat, loading } = useDatabase()
+  const { tuotteet, valmistajat, toimittajat, loading } = useDatabase()
   const [showNewProductForm, setShowNewProductForm] = useState(false)
+  const [showEditProductForm, setShowEditProductForm] = useState(false)
+  const [selectedProductId, setSelectedProductId] = useState('')
   const [product, setProduct] = useState({
     nimi: "",
     kuvaus: "",
@@ -48,7 +50,36 @@ const ProductManager = () => {
       }
     }
   }
+  // Fetch selected product's details
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      if (!selectedProductId) return
+      
+      try {
+        const response = await CSService.getProductById(selectedProductId)
+        const productData = response.data
+        
+        setProduct({
+          nimi: productData.nimi,
+          kuvaus: productData.kuvaus,
+          hinta: productData.hinta,
+          tuotekuvalinkki: productData.tuotekuvalinkki,
+          osasto_id: productData.osasto.id,
+          valmistaja_id: productData.valmistaja.id,
+          toimittaja_id: productData.toimittaja.id
+        })
+      } catch (error) {
+        console.error('Error fetching product details:', error)
+      }
+    }
 
+    fetchProductDetails()
+  }, [selectedProductId])
+
+  const handleProductSelect = (event) => {
+    setSelectedProductId(event.target.value)
+  }
+  
   const addProduct = async (event) => {
     event.preventDefault()
     const newProduct = {
@@ -73,6 +104,31 @@ const ProductManager = () => {
     }
   }
 
+  const editProduct = async (event) => {
+    event.preventDefault()
+    try {
+      const productId = Number(selectedProductId)
+      
+      const productToUpdate = {
+        nimi: product.nimi,
+        kuvaus: product.kuvaus,
+        hinta: product.hinta,
+        tuotekuvalinkki: product.tuotekuvalinkki,
+        osasto_id: Number(product.osasto_id),
+        valmistaja_id: Number(product.valmistaja_id),
+        toimittaja_id: Number(product.toimittaja_id)
+      }
+  
+      await CSService.editProduct(productToUpdate, productId)
+  
+      alert('Tuote päivitetty onnistuneesti!')
+      setShowEditProductForm(false)
+    } catch (error) {
+      console.error('Error updating product:', error)
+      alert('Virhe tuotteen päivityksessä')
+    }
+  }
+
   if (loading) {
     return <div className="loading">Loading...</div>
   }
@@ -87,31 +143,31 @@ const ProductManager = () => {
         {showNewProductForm && (
           <form onSubmit={addProduct} className="new-form">
             <label>Tuotteen nimi</label>
-            <input 
-              name="nimi" 
-              value={product.nimi} 
+            <input
+              name="nimi"
+              value={product.nimi}
               onChange={handleChange}
               required
             />
             <label>Tuotteen kuvaus</label>
-            <textarea 
-              name="kuvaus" 
-              value={product.kuvaus} 
+            <textarea
+              name="kuvaus"
+              value={product.kuvaus}
               onChange={handleChange}
               required
             />
             <label>Tuotteen hinta</label>
-            <input 
-              name="hinta" 
-              value={product.hinta} 
+            <input
+              name="hinta"
+              value={product.hinta}
               onChange={handleChange}
               onBlur={handleBlur}
               required
             />
             <label>Tuotteen kuva linkkinä</label>
-            <input 
-              name="tuotekuvalinkki" 
-              value={product.tuotekuvalinkki} 
+            <input
+              name="tuotekuvalinkki"
+              value={product.tuotekuvalinkki}
               onChange={handleChange}
               onBlur={handleBlur}
               required
@@ -137,28 +193,28 @@ const ProductManager = () => {
               </optgroup>
             </select>
             <label>Valitse Tuotteen Valmistaja</label>
-            <select 
-              name="valmistaja_id" 
-              value={product.valmistaja_id} 
-              onChange={handleChange} 
+            <select
+              name="valmistaja_id"
+              value={product.valmistaja_id}
+              onChange={handleChange}
               required
             >
               <option value="">Valitse valmistaja</option>
-              {valmistajat.map(v => (
+              {valmistajat.map((v) => (
                 <option key={v.id} value={v.id}>
                   {v.nimi}
                 </option>
               ))}
             </select>
             <label>Valitse Tuotteen Toimittaja</label>
-            <select 
-              name="toimittaja_id" 
-              value={product.toimittaja_id} 
-              onChange={handleChange} 
+            <select
+              name="toimittaja_id"
+              value={product.toimittaja_id}
+              onChange={handleChange}
               required
             >
               <option value="">Valitse toimittaja</option>
-              {toimittajat.map(t => (
+              {toimittajat.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.nimi}
                 </option>
@@ -169,8 +225,117 @@ const ProductManager = () => {
             </button>
           </form>
         )}
+  
         <h3>Muokkaa tuotetta</h3>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quam. Aperiam reiciendis, sapiente dolor nostrum numquam facere a et sit nemo commodi, laborum quisquam excepturi rem sequi dicta ducimus. Ipsum.</p>
+        <button onClick={() => setShowEditProductForm(!showEditProductForm)}>
+          {!showEditProductForm ? "Näytä muokkaus lomake" : "Piilota muokkaus lomake"}
+        </button>
+        {showEditProductForm && (
+          <div>
+            <div className="product-to-edit-select-container">
+            <label>Valitse Muokattava Tuote</label>
+            <select
+              value={selectedProductId}
+              onChange={handleProductSelect}
+              required
+              className="product-to-edit-select"
+            >
+              <option value="">Valitse tuote</option>
+              {tuotteet.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.nimi}
+                </option>
+              ))}
+            </select>
+            </div>
+  
+            {selectedProductId && (
+              <form onSubmit={editProduct} className="new-form">
+                <label>Tuotteen nimi</label>
+                <input
+                  name="nimi"
+                  value={product.nimi}
+                  onChange={handleChange}
+                  required
+                />
+                <label>Tuotteen kuvaus</label>
+                <textarea
+                  name="kuvaus"
+                  value={product.kuvaus}
+                  onChange={handleChange}
+                  required
+                />
+                <label>Tuotteen hinta</label>
+                <input
+                  name="hinta"
+                  value={product.hinta}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  required
+                />
+                <label>Tuotteen kuva linkkinä</label>
+                <input
+                  name="tuotekuvalinkki"
+                  value={product.tuotekuvalinkki}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  required
+                />
+                <label>Valitse Tuotteen Osasto</label>
+                <select
+                  name="osasto_id"
+                  value={product.osasto_id}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Valitse osasto</option>
+                  <optgroup label="Kahvilaitteet">
+                    <option value="3">Espressolaitteet</option>
+                    <option value="4">Suodatinkahvi</option>
+                  </optgroup>
+                  <optgroup label="Kulutustuotteet">
+                    <option value="6">Suodattimet</option>
+                  </optgroup>
+                  <optgroup label="Kahvi">
+                    <option value="8">Espressot</option>
+                    <option value="9">Suodatinkahvit</option>
+                  </optgroup>
+                </select>
+                <label>Valitse Tuotteen Valmistaja</label>
+                <select
+                  name="valmistaja_id"
+                  value={product.valmistaja_id}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Valitse valmistaja</option>
+                  {valmistajat.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.nimi}
+                    </option>
+                  ))}
+                </select>
+                <label>Valitse Tuotteen Toimittaja</label>
+                <select
+                  name="toimittaja_id"
+                  value={product.toimittaja_id}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Valitse toimittaja</option>
+                  {toimittajat.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.nimi}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit" className="form-btn">
+                  Muokkaa
+                </button>
+              </form>
+            )}
+          </div>
+        )}
         <h3>Poista tuote</h3>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quam. Aperiam reiciendis, sapiente dolor nostrum numquam facere a et sit nemo commodi, laborum quisquam excepturi rem sequi dicta ducimus. Ipsum.</p>
       </div>

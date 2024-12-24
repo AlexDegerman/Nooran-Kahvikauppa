@@ -49,11 +49,7 @@ const ProductPage = () => {
         </div>
       </div>
     </div>
-  );
-  
-  
-  
-  
+  )
 }
 
 export default ProductPage

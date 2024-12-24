@@ -19,19 +19,23 @@ import com.example.backend.repository.ValmistajaRepository;
 @Service
 public class TuoteService {
   
-      @Autowired
-    private TuoteRepository tuoteRepository;
+  @Autowired
+  private TuoteRepository tuoteRepository;
     
-    @Autowired
-    private OsastoRepository osastoRepository;
+  @Autowired
+  private OsastoRepository osastoRepository;
     
-    @Autowired
-    private ValmistajaRepository valmistajaRepository;
+  @Autowired
+  private ValmistajaRepository valmistajaRepository;
     
-    @Autowired
-    private ToimittajaRepository toimittajaRepository;
+  @Autowired
+  private ToimittajaRepository toimittajaRepository;
 
-
+  // Fetch all products
+  public List<Tuote> getAllTuotteet() {
+    return tuoteRepository.findAll();
+  }
+  
   // Fetch all products under a main category
   public List<Tuote> getProductsUnderMainCategory(Long osastoId) {
     return tuoteRepository.getProductsUnderMainCategory(osastoId);
@@ -51,17 +55,42 @@ public class TuoteService {
     tuote.setTuotekuvalinkki(tuoteDTO.getTuotekuvalinkki());
     
     Osasto osasto = osastoRepository.findById(tuoteDTO.getOsasto_id())
-    .orElseThrow(() -> new RuntimeException("Osasto not found"));
+      .orElseThrow(() -> new RuntimeException("Osasto not found"));
     Valmistaja valmistaja = valmistajaRepository.findById(tuoteDTO.getValmistaja_id())
-        .orElseThrow(() -> new RuntimeException("Valmistaja not found"));
+      .orElseThrow(() -> new RuntimeException("Valmistaja not found"));
     Toimittaja toimittaja = toimittajaRepository.findById(tuoteDTO.getToimittaja_id())
-        .orElseThrow(() -> new RuntimeException("Toimittaja not found"));
+      .orElseThrow(() -> new RuntimeException("Toimittaja not found"));
     
     tuote.setOsasto(osasto);
     tuote.setValmistaja(valmistaja);
     tuote.setToimittaja(toimittaja);
 
     return tuoteRepository.save(tuote);
+  }
+
+  //Edit existing product
+  public Tuote updateTuote(Long id, TuoteDTO tuoteDTO) {
+    Tuote existingTuote = tuoteRepository.findById(id)
+      .orElseThrow(() -> new RuntimeException("Tuote not found with id: " + id));
+
+    existingTuote.setNimi(tuoteDTO.getNimi());
+    existingTuote.setKuvaus(tuoteDTO.getKuvaus());
+    existingTuote.setHinta(tuoteDTO.getHinta());
+    existingTuote.setTuotekuvalinkki(tuoteDTO.getTuotekuvalinkki());
+
+    Osasto osasto = osastoRepository.findById((tuoteDTO.getOsasto_id()))
+      .orElseThrow(() -> new RuntimeException("Osasto not found"));
+    Valmistaja valmistaja = valmistajaRepository.findById(tuoteDTO.getValmistaja_id())
+      .orElseThrow(() -> new RuntimeException("Valmistaja not found"));
+    Toimittaja toimittaja = toimittajaRepository.findById(tuoteDTO.getToimittaja_id())
+      .orElseThrow(() -> new RuntimeException("Toimittaja not found"));
+    
+    existingTuote.setOsasto(osasto);
+    existingTuote.setValmistaja(valmistaja);
+    existingTuote.setToimittaja(toimittaja);
+
+    return tuoteRepository.save(existingTuote);
+
   }
 }
 

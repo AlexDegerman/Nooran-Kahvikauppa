@@ -2,6 +2,10 @@ import axios from "axios"
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL
 
+const getAllProducts = () => {
+  return axios.get(`${baseUrl}` + '/api/tuotteet')
+}
+
 const getProductsByMainCategory = (mainCategoryId) => {
   return axios.get(`${baseUrl}` + '/api/tuotteet/paakategoria/' + mainCategoryId)
 }
@@ -25,4 +29,9 @@ const getAllValmistajat = () => {
 const addProduct = (product) => {
   return axios.post(`${baseUrl}/api/tuotteet`, product)
 }
-export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllToimittajat, getAllValmistajat, addProduct}
+
+const editProduct = (product, productId) => {
+  return axios.put(`${baseUrl}/api/tuotteet/` + productId, product)
+}
+
+export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllToimittajat, getAllValmistajat, addProduct, editProduct, getAllProducts}
