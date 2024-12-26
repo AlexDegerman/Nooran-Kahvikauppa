@@ -31,11 +31,12 @@
 .form-btn {
   width: 30%;
 }
-.product-to-edit-select-container {
+.product-select-container {
   margin-top:10px;
 }
-.product-to-edit-select {
+.product-select {
   display: flex;
   flex-direction: column;
   margin-top:10px;
+  margin-bottom:10px;
 }

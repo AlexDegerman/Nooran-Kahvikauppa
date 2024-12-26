@@ -1,9 +1,9 @@
 package com.example.backend.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,16 +27,25 @@ public class TuoteController {
     }
     
     @GetMapping("/paakategoria/{mainCategoryId}")
-    public ResponseEntity<List<Tuote>> getProductsUnderMainCategory(@PathVariable Long mainCategoryId) {
-        List<Tuote> products = tuoteService.getProductsUnderMainCategory(mainCategoryId);
-        return ResponseEntity.ok(products);
+    public ResponseEntity<?> getProductsUnderMainCategory(@PathVariable Long mainCategoryId) {
+        try {
+            List<Tuote> products = tuoteService.getProductsUnderMainCategory(mainCategoryId);
+            return ResponseEntity.ok(products);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+              .body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tuote> getProductById(@PathVariable Long id) {
-        Optional<Tuote> product = tuoteService.getProductById(id);
-        return product.map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> getProductById(@PathVariable Long id) {
+        try {
+            Tuote product = tuoteService.getProductById(id);
+            return ResponseEntity.ok(product);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+              .body(e.getMessage());
+        }
     }
 
     @PostMapping
@@ -44,8 +53,12 @@ public class TuoteController {
         try {
             Tuote tuote = tuoteService.addTuote(tuoteDTO);
             return ResponseEntity.ok(tuote);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+              .body(e.getMessage());
         }
     }
 
@@ -55,9 +68,22 @@ public class TuoteController {
             Tuote updatedTuote = tuoteService.updateTuote(id, tuoteDTO);
             return ResponseEntity.ok(updatedTuote);
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+              .body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+              .body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTuote(@PathVariable Long id) {
+        try {
+            tuoteService.deleteTuote(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+              .body(e.getMessage());
         }
     }
 }

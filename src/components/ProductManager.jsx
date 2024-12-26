@@ -5,10 +5,11 @@ import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 
 const ProductManager = () => {
-  const { tuotteet, valmistajat, toimittajat, loading } = useDatabase()
+  const { tuotteet, valmistajat, toimittajat, loading, refreshProducts } = useDatabase()
   const [showNewProductForm, setShowNewProductForm] = useState(false)
   const [showEditProductForm, setShowEditProductForm] = useState(false)
-  const [selectedProductId, setSelectedProductId] = useState('')
+  const [selectedProductToEditId, setSelectedProductToEditId] = useState('')
+  const [selectedProductToDeleteId, setSelectedProductToDeleteId] = useState('')
   const [product, setProduct] = useState({
     nimi: "",
     kuvaus: "",
@@ -53,10 +54,10 @@ const ProductManager = () => {
   // Fetch selected product's details
   useEffect(() => {
     const fetchProductDetails = async () => {
-      if (!selectedProductId) return
+      if (!selectedProductToEditId) return
       
       try {
-        const response = await CSService.getProductById(selectedProductId)
+        const response = await CSService.getProductById(selectedProductToEditId)
         const productData = response.data
         
         setProduct({
@@ -74,10 +75,13 @@ const ProductManager = () => {
     }
 
     fetchProductDetails()
-  }, [selectedProductId])
+  }, [selectedProductToEditId])
 
-  const handleProductSelect = (event) => {
-    setSelectedProductId(event.target.value)
+  const handleProductToEditSelect = (event) => {
+    setSelectedProductToEditId(event.target.value)
+  }
+  const handleProductToDeleteSelect = (event) => {
+    setSelectedProductToDeleteId(event.target.value)
   }
   
   const addProduct = async (event) => {
@@ -107,7 +111,7 @@ const ProductManager = () => {
   const editProduct = async (event) => {
     event.preventDefault()
     try {
-      const productId = Number(selectedProductId)
+      const productId = Number(selectedProductToEditId)
       
       const productToUpdate = {
         nimi: product.nimi,
@@ -126,6 +130,27 @@ const ProductManager = () => {
     } catch (error) {
       console.error('Error updating product:', error)
       alert('Virhe tuotteen päivityksessä')
+    }
+  }
+
+  const deleteProduct = async (event) => {
+    event.preventDefault()
+    try {
+      if (!selectedProductToDeleteId) {
+        alert('Valitse ensin poistettava tuote.')
+        return
+      }
+      const confirmDelete = window.confirm('Oletko varma, että haluat poistaa tämän tuotteen?')
+      if (!confirmDelete) {
+        return
+      }
+      const productId = Number(selectedProductToDeleteId)
+      await CSService.deleteProduct(productId)
+      refreshProducts()
+      alert('Tuote poistettu onnistuneesti!')
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      alert('Virhe tuotteen poistamisessa')
     }
   }
 
@@ -232,13 +257,13 @@ const ProductManager = () => {
         </button>
         {showEditProductForm && (
           <div>
-            <div className="product-to-edit-select-container">
+            <div className="product-select-container">
             <label>Valitse Muokattava Tuote</label>
             <select
-              value={selectedProductId}
-              onChange={handleProductSelect}
+              value={selectedProductToEditId}
+              onChange={handleProductToEditSelect}
               required
-              className="product-to-edit-select"
+              className="product-select"
             >
               <option value="">Valitse tuote</option>
               {tuotteet.map((t) => (
@@ -249,7 +274,7 @@ const ProductManager = () => {
             </select>
             </div>
   
-            {selectedProductId && (
+            {selectedProductToEditId && (
               <form onSubmit={editProduct} className="new-form">
                 <label>Tuotteen nimi</label>
                 <input
@@ -337,7 +362,23 @@ const ProductManager = () => {
           </div>
         )}
         <h3>Poista tuote</h3>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quam. Aperiam reiciendis, sapiente dolor nostrum numquam facere a et sit nemo commodi, laborum quisquam excepturi rem sequi dicta ducimus. Ipsum.</p>
+        <div className="product-select-container">
+            <label>Valitse Poistettava Tuote</label>
+            <select
+              value={selectedProductToDeleteId}
+              onChange={handleProductToDeleteSelect}
+              required
+              className="product-select"
+            >
+              <option value="">Valitse tuote</option>
+              {tuotteet.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.nimi}
+                </option>
+              ))}
+            </select>
+            </div>
+            <button onClick={deleteProduct}>Delete</button>
       </div>
     </div>
   )

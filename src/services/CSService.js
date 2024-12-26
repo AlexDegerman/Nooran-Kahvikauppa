@@ -13,6 +13,17 @@ const getProductsByMainCategory = (mainCategoryId) => {
 const getProductById = (productId) => {
   return axios.get(`${baseUrl}`+ '/api/tuotteet/' + productId)
 }
+const addProduct = (product) => {
+  return axios.post(`${baseUrl}/api/tuotteet`, product)
+}
+
+const editProduct = (product, productId) => {
+  return axios.put(`${baseUrl}/api/tuotteet/` + productId, product)
+}
+
+const deleteProduct = (productId, product) => {
+  return axios.delete(`${baseUrl}/api/tuotteet/` + productId, product)
+}
 
 const getAllOsastot = () => {
   return axios.get(`${baseUrl}/api/osastot`)
@@ -26,12 +37,4 @@ const getAllValmistajat = () => {
   return axios.get(`${baseUrl}/api/valmistajat`)
 }
 
-const addProduct = (product) => {
-  return axios.post(`${baseUrl}/api/tuotteet`, product)
-}
-
-const editProduct = (product, productId) => {
-  return axios.put(`${baseUrl}/api/tuotteet/` + productId, product)
-}
-
-export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllToimittajat, getAllValmistajat, addProduct, editProduct, getAllProducts}
+export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllToimittajat, getAllValmistajat, addProduct, editProduct, getAllProducts, deleteProduct}

@@ -1,7 +1,6 @@
 package com.example.backend.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,12 +37,15 @@ public class TuoteService {
   
   // Fetch all products under a main category
   public List<Tuote> getProductsUnderMainCategory(Long osastoId) {
+    osastoRepository.findById(osastoId)
+      .orElseThrow(() -> new RuntimeException("Osasto not found with id: " + osastoId));
     return tuoteRepository.getProductsUnderMainCategory(osastoId);
   }
 
   // Fetch a specific product with id
-  public Optional<Tuote> getProductById(Long id) {
-    return tuoteRepository.findById(id);
+  public Tuote getProductById(Long id) {
+    return tuoteRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Tuote not found with id: " + id));
   }
 
   // Add a new product
@@ -90,7 +92,14 @@ public class TuoteService {
     existingTuote.setToimittaja(toimittaja);
 
     return tuoteRepository.save(existingTuote);
+  }
 
+  //Delete existing product
+  public void deleteTuote(Long id) {
+    Tuote tuote = tuoteRepository.findById(id)
+      .orElseThrow(() -> new RuntimeException("Tuote not found with id: " + id));
+
+    tuoteRepository.delete(tuote);
   }
 }
 

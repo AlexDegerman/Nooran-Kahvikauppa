@@ -9,6 +9,7 @@ export const DatabaseProvider = ({ children }) => {
   const [tuotteet, setTuotteet] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState()
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -33,7 +34,11 @@ export const DatabaseProvider = ({ children }) => {
     }
     
     fetchAllData()
-  }, [])
+  }, [refresh])
+
+  const refreshProducts = () => {
+    setRefresh(!refresh)
+  }
 
   const value = {
     osastot,
@@ -41,7 +46,8 @@ export const DatabaseProvider = ({ children }) => {
     toimittajat,
     tuotteet,
     loading,
-    error
+    error,
+    refreshProducts
   }
 
   return (
