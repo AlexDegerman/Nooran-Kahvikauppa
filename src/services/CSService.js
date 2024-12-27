@@ -29,12 +29,27 @@ const getAllOsastot = () => {
   return axios.get(`${baseUrl}/api/osastot`)
 }
 
-const getAllToimittajat = () => {
+const getAllSuppliers = () => {
   return axios.get(`${baseUrl}/api/toimittajat`)
 }
 
+const addSupplier = (supplier) => {
+  return axios.post(`${baseUrl}/api/toimittajat`, supplier)
+}
+
+const getSupplierById = (productId) => {
+  return axios.get(`${baseUrl}`+ '/api/toimittajat/' + productId)
+}
+
+const editSupplier = (supplier, supplierId) => {
+  return axios.put(`${baseUrl}/api/toimittajat/` + supplierId, supplier)
+}
+
+const deleteSupplier = (supplierId, supplier) => {
+  return axios.delete(`${baseUrl}/api/toimittajat/` + supplierId, supplier)
+}
 const getAllValmistajat = () => {
   return axios.get(`${baseUrl}/api/valmistajat`)
 }
 
-export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllToimittajat, getAllValmistajat, addProduct, editProduct, getAllProducts, deleteProduct}
+export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllSuppliers, getAllValmistajat, addProduct, editProduct, getAllProducts, deleteProduct, addSupplier, editSupplier, deleteSupplier, getSupplierById}

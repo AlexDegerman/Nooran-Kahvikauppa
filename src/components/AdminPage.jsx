@@ -6,10 +6,10 @@ const AdminPage = () => {
   return (
     <div className="admin-container">
       <div className="admin-options">
-        <Link to={`/productmanager`}>Hallitse tuotteita</Link>
-        <p>Hallitse toimittajia</p>
-        <p>Hallitse valmistajia</p>
-        <p>Rekisteröi VIP-asiakas</p>
+        <Link to={"/tuotteenhallinta"}>Hallitse tuotteita</Link>
+        <Link to={"/toimittajanhallinta"}>Hallitse toimittajia</Link>
+        <Link to={"/valmistajanhallinta"}>Hallitse valmistajia</Link>
+        <Link to={"/rekisteroi"}>Rekisteröi VIP-asiakas</Link>
       </div>
     </div>
   )

@@ -7,11 +7,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
 }
 
 .admin-options {
+  display: flex;
+  flex-direction: column;
   background-color: #1C1C1C;
   padding: 40px;
   font-size: 20px;
+  gap: 20px;
 }

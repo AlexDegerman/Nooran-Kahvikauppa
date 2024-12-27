@@ -1,16 +1,24 @@
-// ProductManager.jsx
 import { useEffect, useState } from 'react'
-import '../styles/ProductManager.css'
+import '../styles/DataManager.css'
 import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 
 const ProductManager = () => {
-  const { tuotteet, valmistajat, toimittajat, loading, refreshProducts } = useDatabase()
+  const { tuotteet, valmistajat, toimittajat, loading, refreshData } = useDatabase()
   const [showNewProductForm, setShowNewProductForm] = useState(false)
   const [showEditProductForm, setShowEditProductForm] = useState(false)
   const [selectedProductToEditId, setSelectedProductToEditId] = useState('')
   const [selectedProductToDeleteId, setSelectedProductToDeleteId] = useState('')
   const [product, setProduct] = useState({
+    nimi: "",
+    kuvaus: "",
+    hinta: "",
+    tuotekuvalinkki: "",
+    osasto_id: "",
+    valmistaja_id: "",
+    toimittaja_id: ""
+  })
+  const [productForEdit, setProductForEdit] = useState({
     nimi: "",
     kuvaus: "",
     hinta: "",
@@ -27,6 +35,14 @@ const ProductManager = () => {
       [name]: value
     }))
   }
+  const handleEditChange = (event) => {
+    const { name, value } = event.target
+    setProductForEdit(prevProduct => ({
+      ...prevProduct,
+      [name]: value
+    }))
+  }
+
   const handleBlur = (event) => {
     const { name, value } = event.target
     if (name === "tuotekuvalinkki" && value !== '') {
@@ -60,7 +76,7 @@ const ProductManager = () => {
         const response = await CSService.getProductById(selectedProductToEditId)
         const productData = response.data
         
-        setProduct({
+        setProductForEdit({
           nimi: productData.nimi,
           kuvaus: productData.kuvaus,
           hinta: productData.hinta,
@@ -92,6 +108,7 @@ const ProductManager = () => {
     }
     try {
       await CSService.addProduct(newProduct)
+      refreshData()
       alert(`Lisätty: ${product.nimi}`)
       setShowNewProductForm(false)
       setProduct({ 
@@ -114,17 +131,17 @@ const ProductManager = () => {
       const productId = Number(selectedProductToEditId)
       
       const productToUpdate = {
-        nimi: product.nimi,
-        kuvaus: product.kuvaus,
-        hinta: product.hinta,
-        tuotekuvalinkki: product.tuotekuvalinkki,
-        osasto_id: Number(product.osasto_id),
-        valmistaja_id: Number(product.valmistaja_id),
-        toimittaja_id: Number(product.toimittaja_id)
+        nimi: productForEdit.nimi,
+        kuvaus: productForEdit.kuvaus,
+        hinta: productForEdit.hinta,
+        tuotekuvalinkki: productForEdit.tuotekuvalinkki,
+        osasto_id: Number(productForEdit.osasto_id),
+        valmistaja_id: Number(productForEdit.valmistaja_id),
+        toimittaja_id: Number(productForEdit.toimittaja_id)
       }
   
       await CSService.editProduct(productToUpdate, productId)
-  
+      refreshData()
       alert('Tuote päivitetty onnistuneesti!')
       setShowEditProductForm(false)
     } catch (error) {
@@ -146,7 +163,7 @@ const ProductManager = () => {
       }
       const productId = Number(selectedProductToDeleteId)
       await CSService.deleteProduct(productId)
-      refreshProducts()
+      refreshData()
       alert('Tuote poistettu onnistuneesti!')
     } catch (error) {
       console.error('Error deleting product:', error)
@@ -197,7 +214,7 @@ const ProductManager = () => {
               onBlur={handleBlur}
               required
             />
-            <label>Valitse Tuotteen Osasto</label>
+            <label>Valitse tuotteen osasto</label>
             <select
               name="osasto_id"
               value={product.osasto_id}
@@ -217,7 +234,7 @@ const ProductManager = () => {
                 <option value="9">Suodatinkahvit</option>
               </optgroup>
             </select>
-            <label>Valitse Tuotteen Valmistaja</label>
+            <label>Valitse tuotteen valmistaja</label>
             <select
               name="valmistaja_id"
               value={product.valmistaja_id}
@@ -231,7 +248,7 @@ const ProductManager = () => {
                 </option>
               ))}
             </select>
-            <label>Valitse Tuotteen Toimittaja</label>
+            <label>Valitse tuotteen toimittaja</label>
             <select
               name="toimittaja_id"
               value={product.toimittaja_id}
@@ -257,13 +274,13 @@ const ProductManager = () => {
         </button>
         {showEditProductForm && (
           <div>
-            <div className="product-select-container">
-            <label>Valitse Muokattava Tuote</label>
+            <div className="data-select-container">
+            <label>Valitse muokattava tuote</label>
             <select
               value={selectedProductToEditId}
               onChange={handleProductToEditSelect}
               required
-              className="product-select"
+              className="data-select"
             >
               <option value="">Valitse tuote</option>
               {tuotteet.map((t) => (
@@ -279,38 +296,38 @@ const ProductManager = () => {
                 <label>Tuotteen nimi</label>
                 <input
                   name="nimi"
-                  value={product.nimi}
-                  onChange={handleChange}
+                  value={productForEdit.nimi}
+                  onChange={handleEditChange}
                   required
                 />
                 <label>Tuotteen kuvaus</label>
                 <textarea
                   name="kuvaus"
-                  value={product.kuvaus}
-                  onChange={handleChange}
+                  value={productForEdit.kuvaus}
+                  onChange={handleEditChange}
                   required
                 />
                 <label>Tuotteen hinta</label>
                 <input
                   name="hinta"
-                  value={product.hinta}
-                  onChange={handleChange}
+                  value={productForEdit.hinta}
+                  onChange={handleEditChange}
                   onBlur={handleBlur}
                   required
                 />
                 <label>Tuotteen kuva linkkinä</label>
                 <input
                   name="tuotekuvalinkki"
-                  value={product.tuotekuvalinkki}
-                  onChange={handleChange}
+                  value={productForEdit.tuotekuvalinkki}
+                  onChange={handleEditChange}
                   onBlur={handleBlur}
                   required
                 />
-                <label>Valitse Tuotteen Osasto</label>
+                <label>Valitse tuotteen osasto</label>
                 <select
                   name="osasto_id"
-                  value={product.osasto_id}
-                  onChange={handleChange}
+                  value={productForEdit.osasto_id}
+                  onChange={handleEditChange}
                   required
                 >
                   <option value="">Valitse osasto</option>
@@ -326,11 +343,11 @@ const ProductManager = () => {
                     <option value="9">Suodatinkahvit</option>
                   </optgroup>
                 </select>
-                <label>Valitse Tuotteen Valmistaja</label>
+                <label>Valitse tuotteen valmistaja</label>
                 <select
                   name="valmistaja_id"
-                  value={product.valmistaja_id}
-                  onChange={handleChange}
+                  value={productForEdit.valmistaja_id}
+                  onChange={handleEditChange}
                   required
                 >
                   <option value="">Valitse valmistaja</option>
@@ -340,11 +357,11 @@ const ProductManager = () => {
                     </option>
                   ))}
                 </select>
-                <label>Valitse Tuotteen Toimittaja</label>
+                <label>Valitse tuotteen toimittaja</label>
                 <select
                   name="toimittaja_id"
-                  value={product.toimittaja_id}
-                  onChange={handleChange}
+                  value={productForEdit.toimittaja_id}
+                  onChange={handleEditChange}
                   required
                 >
                   <option value="">Valitse toimittaja</option>
@@ -362,13 +379,13 @@ const ProductManager = () => {
           </div>
         )}
         <h3>Poista tuote</h3>
-        <div className="product-select-container">
-            <label>Valitse Poistettava Tuote</label>
+        <div className="data-select-container">
+            <label>Valitse poistettava tuote</label>
             <select
               value={selectedProductToDeleteId}
               onChange={handleProductToDeleteSelect}
               required
-              className="product-select"
+              className="data-select"
             >
               <option value="">Valitse tuote</option>
               {tuotteet.map((t) => (
@@ -378,7 +395,7 @@ const ProductManager = () => {
               ))}
             </select>
             </div>
-            <button onClick={deleteProduct}>Delete</button>
+            <button onClick={deleteProduct}>Poista</button>
       </div>
     </div>
   )

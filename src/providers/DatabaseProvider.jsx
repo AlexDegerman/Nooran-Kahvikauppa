@@ -18,10 +18,9 @@ export const DatabaseProvider = ({ children }) => {
         const [osastotRes, valmistajatRes, toimittajatRes, tuotteetRes] = await Promise.all([
           CSService.getAllOsastot(),
           CSService.getAllValmistajat(),
-          CSService.getAllToimittajat(),
+          CSService.getAllSuppliers(),
           CSService.getAllProducts()
         ])
-
         setOsastot(osastotRes.data)
         setValmistajat(valmistajatRes.data)
         setToimittajat(toimittajatRes.data)
@@ -36,7 +35,7 @@ export const DatabaseProvider = ({ children }) => {
     fetchAllData()
   }, [refresh])
 
-  const refreshProducts = () => {
+  const refreshData = () => {
     setRefresh(!refresh)
   }
 
@@ -47,7 +46,7 @@ export const DatabaseProvider = ({ children }) => {
     tuotteet,
     loading,
     error,
-    refreshProducts
+    refreshData
   }
 
   return (

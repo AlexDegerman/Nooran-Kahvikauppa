@@ -31,10 +31,10 @@
 .form-btn {
   width: 30%;
 }
-.product-select-container {
+.data-select-container {
   margin-top:10px;
 }
-.product-select {
+.data-select {
   display: flex;
   flex-direction: column;
   margin-top:10px;
