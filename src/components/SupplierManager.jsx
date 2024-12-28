@@ -35,6 +35,20 @@ const SupplierManager = () => {
     }))
   }
 
+  const handleBlur = (event) => {
+    const { name, value } = event.target
+    if (name === "yhteyshenkilonEmail" && value !== '') {
+      const isValidEmail = value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
+      if (!isValidEmail) {
+        alert("Virhe: Anna kelvollinen sähköpostiosoite (esimerkiksi: example@example.com).");
+        setSupplier(prevSupplier => ({
+          ...prevSupplier,
+          [name]: ''
+        }))
+      }
+    } 
+  }
+
   // Fetch selected supplier's details
   useEffect(() => {
     const fetchSupplierDetails = async () => {
@@ -155,6 +169,7 @@ const SupplierManager = () => {
               name="yhteyshenkilonEmail"
               value={supplier.yhteyshenkilonEmail}
               onChange={handleChange}
+              onBlur={handleBlur}
               required
             />
             <button type="submit" className="form-btn">
@@ -207,6 +222,7 @@ const SupplierManager = () => {
                   name="yhteyshenkilonEmail"
                   value={supplierForEdit.yhteyshenkilonEmail}
                   onChange={handleEditChange}
+                  onBlur={handleBlur}
                   required
                 />
                 <button type="submit" className="form-btn">

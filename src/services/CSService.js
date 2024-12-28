@@ -37,8 +37,8 @@ const addSupplier = (supplier) => {
   return axios.post(`${baseUrl}/api/toimittajat`, supplier)
 }
 
-const getSupplierById = (productId) => {
-  return axios.get(`${baseUrl}`+ '/api/toimittajat/' + productId)
+const getSupplierById = (supplierId) => {
+  return axios.get(`${baseUrl}`+ '/api/toimittajat/' + supplierId)
 }
 
 const editSupplier = (supplier, supplierId) => {
@@ -48,8 +48,23 @@ const editSupplier = (supplier, supplierId) => {
 const deleteSupplier = (supplierId, supplier) => {
   return axios.delete(`${baseUrl}/api/toimittajat/` + supplierId, supplier)
 }
-const getAllValmistajat = () => {
+const getAllManufacturers = () => {
   return axios.get(`${baseUrl}/api/valmistajat`)
 }
+const addManufacturer = (manufacturer) => {
+  return axios.post(`${baseUrl}/api/valmistajat`, manufacturer)
+}
 
-export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllSuppliers, getAllValmistajat, addProduct, editProduct, getAllProducts, deleteProduct, addSupplier, editSupplier, deleteSupplier, getSupplierById}
+const getManufacturerById = (manufacturerId) => {
+  return axios.get(`${baseUrl}`+ '/api/valmistajat/' + manufacturerId)
+}
+
+const editManufacturer = (manufacturer, manufacturerId) => {
+  return axios.put(`${baseUrl}/api/valmistajat/` + manufacturerId, manufacturer)
+}
+
+const deleteManufacturer = (manufacturerId, manufacturer) => {
+  return axios.delete(`${baseUrl}/api/valmistajat/` + manufacturerId, manufacturer)
+}
+
+export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllSuppliers, addProduct, editProduct, getAllProducts, deleteProduct, addSupplier, editSupplier, deleteSupplier, getSupplierById, getAllManufacturers, addManufacturer, getManufacturerById, editManufacturer, deleteManufacturer}

@@ -17,7 +17,7 @@ export const DatabaseProvider = ({ children }) => {
         setLoading(true)
         const [osastotRes, valmistajatRes, toimittajatRes, tuotteetRes] = await Promise.all([
           CSService.getAllOsastot(),
-          CSService.getAllValmistajat(),
+          CSService.getAllManufacturers(),
           CSService.getAllSuppliers(),
           CSService.getAllProducts()
         ])

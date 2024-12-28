@@ -7,6 +7,7 @@ import AdminPage from './components/AdminPage'
 import ProductPage from './components/ProductPage'
 import ProductManager from './components/ProductManager'
 import SupplierManager from './components/SupplierManager'
+import ManufacturerManager from './components/ManufacturerManager'
 
 const App = () => {
 
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/tuote/:index" element={<ProductPage/>}/>
         <Route path="/tuotteenhallinta" element={<ProductManager/>}/>
         <Route path="/toimittajanhallinta" element={<SupplierManager/>}/>
+        <Route path="/valmistajanhallinta" element={<ManufacturerManager/>}/>
       </Routes>
     </>
   )
