@@ -13,58 +13,102 @@ const getProductsByMainCategory = (mainCategoryId) => {
 const getProductById = (productId) => {
   return axios.get(`${baseUrl}`+ '/api/tuotteet/' + productId)
 }
-const addProduct = (product) => {
-  return axios.post(`${baseUrl}/api/tuotteet`, product)
+const addProduct = (product, token) => {
+  return axios.post(`${baseUrl}/api/tuotteet`, product, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
-const editProduct = (product, productId) => {
-  return axios.put(`${baseUrl}/api/tuotteet/` + productId, product)
+const editProduct = (product, productId, token) => {
+  return axios.put(`${baseUrl}/api/tuotteet/` + productId, product, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
-const deleteProduct = (productId, product) => {
-  return axios.delete(`${baseUrl}/api/tuotteet/` + productId, product)
-}
-
-const getAllOsastot = () => {
-  return axios.get(`${baseUrl}/api/osastot`)
+const deleteProduct = (productId, token) => {
+  return axios.delete(`${baseUrl}/api/tuotteet/` + productId, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
 const getAllSuppliers = () => {
   return axios.get(`${baseUrl}/api/toimittajat`)
 }
 
-const addSupplier = (supplier) => {
-  return axios.post(`${baseUrl}/api/toimittajat`, supplier)
+const addSupplier = (supplier, token) => {
+  return axios.post(`${baseUrl}/api/toimittajat`, supplier, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
 const getSupplierById = (supplierId) => {
   return axios.get(`${baseUrl}`+ '/api/toimittajat/' + supplierId)
 }
 
-const editSupplier = (supplier, supplierId) => {
-  return axios.put(`${baseUrl}/api/toimittajat/` + supplierId, supplier)
+const editSupplier = (supplier, supplierId, token) => {
+  return axios.put(`${baseUrl}/api/toimittajat/` + supplierId, supplier, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
-const deleteSupplier = (supplierId, supplier) => {
-  return axios.delete(`${baseUrl}/api/toimittajat/` + supplierId, supplier)
+const deleteSupplier = (supplierId, token) => {
+  return axios.delete(`${baseUrl}/api/toimittajat/` + supplierId, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 const getAllManufacturers = () => {
   return axios.get(`${baseUrl}/api/valmistajat`)
 }
-const addManufacturer = (manufacturer) => {
-  return axios.post(`${baseUrl}/api/valmistajat`, manufacturer)
+const addManufacturer = (manufacturer, token) => {
+  return axios.post(`${baseUrl}/api/valmistajat`, manufacturer, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
 const getManufacturerById = (manufacturerId) => {
   return axios.get(`${baseUrl}`+ '/api/valmistajat/' + manufacturerId)
 }
 
-const editManufacturer = (manufacturer, manufacturerId) => {
-  return axios.put(`${baseUrl}/api/valmistajat/` + manufacturerId, manufacturer)
+const editManufacturer = (manufacturer, manufacturerId, token) => {
+  return axios.put(`${baseUrl}/api/valmistajat/` + manufacturerId, manufacturer, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
-const deleteManufacturer = (manufacturerId, manufacturer) => {
-  return axios.delete(`${baseUrl}/api/valmistajat/` + manufacturerId, manufacturer)
+const deleteManufacturer = (manufacturerId, token) => {
+  return axios.delete(`${baseUrl}/api/valmistajat/` + manufacturerId, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
-export default {getProductsByMainCategory, getProductById, getAllOsastot, getAllSuppliers, addProduct, editProduct, getAllProducts, deleteProduct, addSupplier, editSupplier, deleteSupplier, getSupplierById, getAllManufacturers, addManufacturer, getManufacturerById, editManufacturer, deleteManufacturer}
+const registerMember = (nickname, email, password, token) => {
+  return axios.post(`${baseUrl}/api/auth/rekisteroi`, nickname, email, password, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+const Login = (nickname, password) => {
+  return axios.post(`${baseUrl}/api/auth/kirjaudu`, nickname, password)
+}
+
+export default {getProductsByMainCategory, getProductById, getAllSuppliers, addProduct, editProduct, getAllProducts, deleteProduct, addSupplier, editSupplier, deleteSupplier, getSupplierById, getAllManufacturers, addManufacturer, getManufacturerById, editManufacturer, deleteManufacturer, registerMember, Login}

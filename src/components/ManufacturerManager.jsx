@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 
-const ManufacturerManager = () => {
+const ManufacturerManager = ({ token }) => {
   const { valmistajat, loading, refreshData } = useDatabase()
   const [showNewManufacturerForm, setShowNewManufacturerForm] = useState(false)
   const [showEditManufacturerForm, setShowEditManufacturerForm] = useState(false)
@@ -36,15 +36,14 @@ const ManufacturerManager = () => {
   const handleBlur = (event) => {
     const { name, value } = event.target
     if (name === "url" && value !== '') {
-      const isValidUrl = value.match(/^(https?:\/\/)?(www\.)[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i)
-      if (!isValidUrl) {
-        alert("Virhe: Anna kelvollinen URL-osoite (esimerkiksi: www.example.com).")
+      if (!/^(https?:\/\/)?(www\.)[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(value)) {
+        alert("Anna kelvollinen URL-osoite (esimerkiksi: www.example.com).")
         setManufacturer(prevManufacturer => ({
           ...prevManufacturer,
           [name]: ''
         }))
       }
-    } 
+    }
   }
 
   // Fetch selected manufacturer's details
@@ -79,7 +78,7 @@ const ManufacturerManager = () => {
     event.preventDefault()
 
     try {
-      await CSService.addManufacturer(manufacturer)
+      await CSService.addManufacturer(manufacturer, token)
       refreshData()
       alert(`Lisätty: ${manufacturer.nimi}`)
       setShowNewManufacturerForm(false)
@@ -102,7 +101,7 @@ const ManufacturerManager = () => {
         url: manufacturerForEdit.url,
         urlnEmail: manufacturerForEdit.urlnEmail
       }
-      await CSService.editManufacturer(manufacturerToUpdate, manufacturerId)
+      await CSService.editManufacturer(manufacturerToUpdate, manufacturerId, token)
       refreshData()
       alert('Valmistaja päivitetty onnistuneesti!')
       setShowEditManufacturerForm(false)
@@ -124,7 +123,7 @@ const ManufacturerManager = () => {
         return
       }
       const manufacturerId = Number(selectedManufacturerToDeleteId)
-      await CSService.deleteManufacturer(manufacturerId)
+      await CSService.deleteManufacturer(manufacturerId, token)
       refreshData()
       alert('Valmistaja poistettu onnistuneesti!')
     } catch (error) {

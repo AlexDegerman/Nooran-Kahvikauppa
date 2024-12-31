@@ -1,9 +1,8 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import '../styles/Header.css'
 
-const Header = () => {
+const Header = ({ setCurrentMemberId, currentMemberId }) => {
   const navigate = useNavigate()
-  const userId = 1
 
   const handleClick = (category) => {
     let categoryId = 0
@@ -17,18 +16,27 @@ const Header = () => {
   
     navigate('/tuotelista', { state: { category, categoryId }})
   }
-  
+
+  // Logs out user when clicking logout button
+  const Logout = () => {
+    localStorage.removeItem('token')
+    alert("Uloskirjautuminen onnistui!")
+    setCurrentMemberId(null)
+  }
 
   return (
     <header>
       <Link to="/"className="header-title"><h2>Nooran Kahvikauppa</h2></Link>
       <nav className="header-nav-container">
         {/*Display Admin button to Noora*/}
-      {userId === 1 ? (
-      <Link to="/admin" className="header-nav-admin">
-        <p>Admin</p>
+      {currentMemberId === 1 ? (
+      <Link to="/hallintapaneeli" className="header-nav-admin">
+        <p>Hallintapaneeli</p>
       </Link>
     ) : null}
+    {!currentMemberId ? (
+              <NavLink to="/kirjautuminen" className="link">Kirjaudu Sisään</NavLink>
+            ) : ( <button onClick={Logout} className="logout">Kirjaudu ulos</button>)}
         <NavLink to="/" className="header-nav"><p>Etusivu</p></NavLink>
         <button className="header-nav header-nav-button" 
           onClick={() => handleClick('Kahvilaitteet')}>

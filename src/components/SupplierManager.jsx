@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 
-const SupplierManager = () => {
+const SupplierManager = ({ token }) => {
   const { toimittajat, loading, refreshData } = useDatabase()
   const [showNewSupplierForm, setShowNewSupplierForm] = useState(false)
   const [showEditSupplierForm, setShowEditSupplierForm] = useState(false)
@@ -38,15 +38,14 @@ const SupplierManager = () => {
   const handleBlur = (event) => {
     const { name, value } = event.target
     if (name === "yhteyshenkilonEmail" && value !== '') {
-      const isValidEmail = value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
-      if (!isValidEmail) {
-        alert("Virhe: Anna kelvollinen sähköpostiosoite (esimerkiksi: example@example.com).");
+      if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+        alert("Anna kelvollinen sähköpostiosoite (esimerkiksi: example@example.com).")
         setSupplier(prevSupplier => ({
           ...prevSupplier,
           [name]: ''
         }))
       }
-    } 
+    }
   }
 
   // Fetch selected supplier's details
@@ -82,7 +81,7 @@ const SupplierManager = () => {
     event.preventDefault()
 
     try {
-      await CSService.addSupplier(supplier)
+      await CSService.addSupplier(supplier, token)
       refreshData()
       alert(`Lisätty: ${supplier.nimi}`)
       setShowNewSupplierForm(false)
@@ -106,7 +105,7 @@ const SupplierManager = () => {
         yhteyshenkilo: supplierForEdit.yhteyshenkilo,
         yhteyshenkilonEmail: supplierForEdit.yhteyshenkilonEmail
       }
-      await CSService.editSupplier(supplierToUpdate, supplierId)
+      await CSService.editSupplier(supplierToUpdate, supplierId, token)
       refreshData()
       alert('Toimittaja päivitetty onnistuneesti!')
       setShowEditSupplierForm(false)
@@ -128,7 +127,7 @@ const SupplierManager = () => {
         return
       }
       const supplierId = Number(selectedSupplierToDeleteId)
-      await CSService.deleteSupplier(supplierId)
+      await CSService.deleteSupplier(supplierId, token)
       refreshData()
       alert('Toimittaja poistettu onnistuneesti!')
     } catch (error) {

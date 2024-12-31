@@ -6,7 +6,4 @@ import org.springframework.stereotype.Repository;
 import com.example.backend.model.Osasto;
 
 @Repository
-public interface OsastoRepository extends JpaRepository<Osasto, Long> {
-
-
-}
+public interface OsastoRepository extends JpaRepository<Osasto, Long> {}

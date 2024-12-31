@@ -45,7 +45,7 @@ public class TuoteService {
   // Fetch a specific product with id
   public Tuote getProductById(Long id) {
     return tuoteRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Tuote not found with id: " + id));
+      .orElseThrow(() -> new RuntimeException("Tuote not found with id: " + id));
   }
 
   // Add a new product

@@ -39,13 +39,13 @@ const ProductList = () => {
         <ul className="product-list">
           {products.map((product, index) => (
             <div key={index} className="product-card">
-              <Link className="product-card-image" to={`/product/${product.id}`}><img src={product.tuotekuvalinkki} alt={product.nimi}/></Link>
+              <Link className="product-card-image" to={`/tuote/${product.id}`}><img src={product.tuotekuvalinkki} alt={product.nimi}/></Link>
               <ul className="product-list-details">
                 <li className="product-card-detail-value">
                     <span className="product-card-price">${product.hinta}</span><ShoppingCart className="shopping-cart"/>
                 </li>
                 <li className="product-card-detail-value">
-                <Link className="product-card-link" to={`/product/${product.id}`}>{product.nimi}</Link>
+                <Link className="product-card-link" to={`/tuote/${product.id}`}>{product.nimi}</Link>
                 </li>
                 <li className="product-card-detail-value">
                 <Circle size="10px" className="product-card-circle" /> 1-2 työpäivää

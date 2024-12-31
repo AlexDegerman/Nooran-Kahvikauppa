@@ -6,7 +6,4 @@ import org.springframework.stereotype.Repository;
 import com.example.backend.model.Toimittaja;
 
 @Repository
-public interface ToimittajaRepository extends JpaRepository<Toimittaja, Long> {
-
-
-}
+public interface ToimittajaRepository extends JpaRepository<Toimittaja, Long> {}

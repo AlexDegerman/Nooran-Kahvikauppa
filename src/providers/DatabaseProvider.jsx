@@ -3,7 +3,6 @@ import CSService from "../services/CSService"
 import { DatabaseContext } from "../contexts/DatabaseContext"
 
 export const DatabaseProvider = ({ children }) => {
-  const [osastot, setOsastot] = useState([])
   const [valmistajat, setValmistajat] = useState([])
   const [toimittajat, setToimittajat] = useState([])
   const [tuotteet, setTuotteet] = useState([])
@@ -15,13 +14,11 @@ export const DatabaseProvider = ({ children }) => {
     const fetchAllData = async () => {
       try {
         setLoading(true)
-        const [osastotRes, valmistajatRes, toimittajatRes, tuotteetRes] = await Promise.all([
-          CSService.getAllOsastot(),
+        const [valmistajatRes, toimittajatRes, tuotteetRes] = await Promise.all([
           CSService.getAllManufacturers(),
           CSService.getAllSuppliers(),
           CSService.getAllProducts()
         ])
-        setOsastot(osastotRes.data)
         setValmistajat(valmistajatRes.data)
         setToimittajat(toimittajatRes.data)
         setTuotteet(tuotteetRes.data)
@@ -40,7 +37,6 @@ export const DatabaseProvider = ({ children }) => {
   }
 
   const value = {
-    osastot,
     valmistajat,
     toimittajat,
     tuotteet,

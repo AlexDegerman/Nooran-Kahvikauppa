@@ -3,7 +3,7 @@ import '../styles/DataManager.css'
 import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 
-const ProductManager = () => {
+const ProductManager = ({ token }) => {
   const { tuotteet, valmistajat, toimittajat, loading, refreshData } = useDatabase()
   const [showNewProductForm, setShowNewProductForm] = useState(false)
   const [showEditProductForm, setShowEditProductForm] = useState(false)
@@ -46,8 +46,7 @@ const ProductManager = () => {
   const handleBlur = (event) => {
     const { name, value } = event.target
     if (name === "tuotekuvalinkki" && value !== '') {
-      const isValidImageLink = value.match(/\.(jpeg|jpg|png)$/i) && value.match(/^https?:\/\/.+$/)
-      if (!isValidImageLink) {
+      if (!/\.(jpeg|jpg|png)$/i.test(value) || !/^https?:\/\/.+$/i.test(value)) {
         alert("Anna kelvollinen kuvalinkki, jonka pääte on .jpeg, .jpg tai .png.")
         setProduct(prevProduct => ({
           ...prevProduct,
@@ -55,10 +54,9 @@ const ProductManager = () => {
         }))
         return
       }
-    } 
+    }
     if (name === "hinta" && value !== '') {
-      const isValidPrice = value.match(/^\d+([,.])\d{0,2}$|^\d+$/)
-      if (!isValidPrice) {
+      if (!/^\d+([,.])\d{0,2}$|^\d+$/.test(value)) {
         alert("Anna kelvollinen hinta (esim. 29,99 tai 29.99).")
         setProduct(prevProduct => ({
           ...prevProduct,
@@ -107,7 +105,7 @@ const ProductManager = () => {
       hinta: product.hinta.replace(',', '.')
     }
     try {
-      await CSService.addProduct(newProduct)
+      await CSService.addProduct(newProduct, token)
       refreshData()
       alert(`Lisätty: ${product.nimi}`)
       setShowNewProductForm(false)
@@ -140,7 +138,7 @@ const ProductManager = () => {
         toimittaja_id: Number(productForEdit.toimittaja_id)
       }
   
-      await CSService.editProduct(productToUpdate, productId)
+      await CSService.editProduct(productToUpdate, productId, token)
       refreshData()
       alert('Tuote päivitetty onnistuneesti!')
       setShowEditProductForm(false)
@@ -162,7 +160,7 @@ const ProductManager = () => {
         return
       }
       const productId = Number(selectedProductToDeleteId)
-      await CSService.deleteProduct(productId)
+      await CSService.deleteProduct(productId, token)
       refreshData()
       alert('Tuote poistettu onnistuneesti!')
     } catch (error) {

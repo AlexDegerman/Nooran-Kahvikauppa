@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,25 +37,29 @@ public class ToimittajaController {
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getToimittajaById(@PathVariable Long id) {
-      try {
-          Toimittaja toimittaja = toimittajaService.getToimittajaById(id);
-          return ResponseEntity.ok(toimittaja);
-      } catch (RuntimeException e) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(e.getMessage());
-      }
-  }
-  @PostMapping
-    public ResponseEntity<?> addToimittaja(@RequestBody @Valid ToimittajaDTO toimittajaDTO) {
-        try {
-            Toimittaja toimittaja = toimittajaService.addToimittaja(toimittajaDTO);
-            return ResponseEntity.ok(toimittaja);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-              .body(e.getMessage());
-        }
+    try {
+      Toimittaja toimittaja = toimittajaService.getToimittajaById(id);
+      return ResponseEntity.ok(toimittaja);
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(e.getMessage());
     }
+  }
+
+  @PostMapping
+  @PreAuthorize("hasAuthority('ADMIN')") 
+  public ResponseEntity<?> addToimittaja(@RequestBody @Valid ToimittajaDTO toimittajaDTO) {
+    try {
+      Toimittaja toimittaja = toimittajaService.addToimittaja(toimittajaDTO);
+      return ResponseEntity.ok(toimittaja);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(e.getMessage());
+    }
+  }
+
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')") 
   public ResponseEntity<?> updateToimittaja(@PathVariable Long id, @RequestBody @Valid ToimittajaDTO toimittajaDTO) {
     try {
       Toimittaja updatedToimittaja = toimittajaService.updateToimittaja(id, toimittajaDTO);
@@ -69,6 +74,7 @@ public class ToimittajaController {
   }
   
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')") 
   public ResponseEntity<?> deleteToimittaja(@PathVariable Long id) {
     try {
       toimittajaService.deleteToimittaja(id);
@@ -78,5 +84,4 @@ public class ToimittajaController {
         .body(e.getMessage());
     }
   }
-
 }

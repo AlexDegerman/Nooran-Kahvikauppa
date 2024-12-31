@@ -9,7 +9,7 @@ const AdminPage = () => {
         <Link to={"/tuotteenhallinta"}>Hallitse tuotteita</Link>
         <Link to={"/toimittajanhallinta"}>Hallitse toimittajia</Link>
         <Link to={"/valmistajanhallinta"}>Hallitse valmistajia</Link>
-        <Link to={"/rekisteroi"}>Rekisteröi VIP-asiakas</Link>
+        <Link to={"/rekisteroiminen"}>Rekisteröi VIP-asiakas</Link>
       </div>
     </div>
   )

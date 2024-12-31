@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
@@ -36,27 +37,29 @@ public class ValmistajaController {
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getValmistajaById(@PathVariable Long id) {
-      try {
-          Valmistaja valmistaja = valmistajaService.getValmistajaById(id);
-          return ResponseEntity.ok(valmistaja);
-      } catch (RuntimeException e) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(e.getMessage());
-      }
+    try {
+      Valmistaja valmistaja = valmistajaService.getValmistajaById(id);
+      return ResponseEntity.ok(valmistaja);
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(e.getMessage());
+    }
   }
 
   @PostMapping
-    public ResponseEntity<?> addValmistaja(@RequestBody @Valid ValmistajaDTO valmistajaDTO) {
-        try {
-            Valmistaja valmistaja = valmistajaService.addValmistaja(valmistajaDTO);
-            return ResponseEntity.ok(valmistaja);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-              .body(e.getMessage());
-        }
+  @PreAuthorize("hasAuthority('ADMIN')") 
+  public ResponseEntity<?> addValmistaja(@RequestBody @Valid ValmistajaDTO valmistajaDTO) {
+    try {
+      Valmistaja valmistaja = valmistajaService.addValmistaja(valmistajaDTO);
+      return ResponseEntity.ok(valmistaja);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(e.getMessage());
     }
+  }
     
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')") 
   public ResponseEntity<?> updateValmistaja(@PathVariable Long id, @RequestBody @Valid ValmistajaDTO valmistajaDTO) {
     try {
       Valmistaja updatedValmistaja = valmistajaService.updateValmistaja(id, valmistajaDTO);
@@ -71,6 +74,7 @@ public class ValmistajaController {
   }
   
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')") 
   public ResponseEntity<?> deleteValmistaja(@PathVariable Long id) {
     try {
       valmistajaService.deleteValmistaja(id);
@@ -80,5 +84,4 @@ public class ValmistajaController {
         .body(e.getMessage());
     }
   }
-
 }

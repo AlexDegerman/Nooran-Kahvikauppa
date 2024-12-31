@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Toimittaja {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String nimi;
-    private String yhteyshenkilo;
-    private String yhteyshenkilonEmail;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String nimi;
+  private String yhteyshenkilo;
+  private String yhteyshenkilonEmail;
 }
