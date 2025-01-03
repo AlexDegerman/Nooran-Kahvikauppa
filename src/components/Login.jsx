@@ -1,9 +1,11 @@
 import { useState } from "react"
 import CSService from '../services/CSService'
 import { useNavigate } from "react-router-dom"
+import { Eye, EyeOff } from "lucide-react"
 
 export const Login = ({ setRefresh }) => {
   const navigate = useNavigate()
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [credentials, setCredentials] = useState({
     nickname: '',
     password: ''
@@ -49,14 +51,23 @@ export const Login = ({ setRefresh }) => {
             />
           </div>
           <div>
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-              required
-            />
+            <div className="password-input-wrapper">
+              <label>Password:</label>
+              <input
+                type={showCurrentPassword ? 'text' : 'password'}
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="password-toggle-visibility"
+                >
+                  {showCurrentPassword ? <EyeOff size={15}/> : <Eye size={15}/>}
+                </button>
+            </div>
           </div>
           <button type="submit">Login</button>
         </form>

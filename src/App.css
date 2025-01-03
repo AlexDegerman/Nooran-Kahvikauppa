@@ -6,3 +6,8 @@ body {
 a {
   color:#5185fd;
 }
+
+.password-toggle-visibility {
+  border: none;
+  cursor: pointer;
+}

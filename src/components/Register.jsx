@@ -2,10 +2,11 @@ import { useState } from 'react'
 import CSService from '../services/CSService'
 import '../styles/Auth.css'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Eye, EyeOff } from 'lucide-react'
 
 const Register = ({ token }) => {
   const navigate = useNavigate()
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [formData, setFormData] = useState({
     nickname: "",
     password: "",
@@ -125,15 +126,24 @@ const handleBlur = (event) => {
             />
           </div>
           <div>
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              required
-            />
+            <div className="password-input-wrapper">
+              <label>Password:</label>
+              <input
+                type={showCurrentPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+              />
+              <button
+              type="button"
+              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              className="password-toggle-visibility"
+              >
+                {showCurrentPassword ? <EyeOff size={15}/> : <Eye size={15}/>}
+              </button>
+            </div>
           </div>
           <button type="submit">Register</button>
         </form>
