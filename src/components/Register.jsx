@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import CSService from '../services/CSService'
 import '../styles/Auth.css'
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 
 const Register = ({ token }) => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     nickname: "",
     password: "",
@@ -91,6 +94,12 @@ const handleBlur = (event) => {
   return (
     <div className="auth-container">
       <div className="auth-form">
+        {/* Back Button */}
+        <div className="back-button-container">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            <ArrowLeft/>
+          </button>
+        </div>
         <h2>Register</h2>
         <form onSubmit={registerMember}>
           <div>

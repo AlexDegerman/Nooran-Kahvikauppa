@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import CSService from "../services/CSService"
 import '../styles/ProductPage.css'
+import { ArrowLeft } from 'lucide-react'
 
 const ProductPage = () => {
+  const navigate = useNavigate()
   const { index } = useParams()
   const [product, setProduct] = useState({})
   const [loading, setLoading] = useState(true)
@@ -37,6 +39,12 @@ const ProductPage = () => {
   return (
     <div className="product-page-container">
       <div className="product-container">
+        {/* Back Button */}
+        <div className="back-button-container">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            <ArrowLeft/>
+          </button>
+        </div>
         <div className="product-title-container">
           <h1 className="product-title">{product.nimi}</h1>
           <div className="product-card-image">

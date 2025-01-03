@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import '../styles/DataManager.css'
 import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
+import { ArrowLeft } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const ProductManager = ({ token }) => {
   const { tuotteet, valmistajat, toimittajat, loading, refreshData } = useDatabase()
@@ -9,6 +11,7 @@ const ProductManager = ({ token }) => {
   const [showEditProductForm, setShowEditProductForm] = useState(false)
   const [selectedProductToEditId, setSelectedProductToEditId] = useState('')
   const [selectedProductToDeleteId, setSelectedProductToDeleteId] = useState('')
+  const navigate = useNavigate()
   const [product, setProduct] = useState({
     nimi: "",
     kuvaus: "",
@@ -176,6 +179,12 @@ const ProductManager = ({ token }) => {
   return (
     <div className="manager-container">
       <div className="manager-options">
+        {/* Back Button */}
+        <div className="back-button-container">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            <ArrowLeft/>
+          </button>
+        </div>
         <h3>Lisää uusi tuote</h3>
         <button onClick={() => setShowNewProductForm(!showNewProductForm)}>
           {!showNewProductForm ? "Näytä lisäys lomake" : "Piilota lisäys lomake"}

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 
 const ManufacturerManager = ({ token }) => {
   const { valmistajat, loading, refreshData } = useDatabase()
@@ -8,6 +10,7 @@ const ManufacturerManager = ({ token }) => {
   const [showEditManufacturerForm, setShowEditManufacturerForm] = useState(false)
   const [selectedManufacturerToEditId, setSelectedManufacturerToEditId] = useState('')
   const [selectedManufacturerToDeleteId, setSelectedManufacturerToDeleteId] = useState('')
+  const navigate = useNavigate()
   const [manufacturer, setManufacturer] = useState({
     nimi: "",
     url: ""
@@ -139,6 +142,12 @@ const ManufacturerManager = ({ token }) => {
   return (
     <div className="manager-container">
       <div className="manager-options">
+        {/* Back Button */}
+        <div className="back-button-container">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            <ArrowLeft/>
+          </button>
+        </div>
         <h3>Lisää uusi valmistaja</h3>
         <button onClick={() => setShowNewManufacturerForm(!showNewManufacturerForm)}>
           {!showNewManufacturerForm ? "Näytä lisäys lomake" : "Piilota lisäys lomake"}
