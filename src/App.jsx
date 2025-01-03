@@ -1,7 +1,7 @@
 import './App.css'
 import Header from './components/Header'
 import FrontPage from './components/FrontPage'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import ProductList from './components/ProductList'
 import AdminPage from './components/AdminPage'
 import ProductPage from './components/ProductPage'
@@ -19,6 +19,7 @@ const App = () => {
   const [currentMemberId, setCurrentMemberId] = useState()
   const [token, setToken] = useState(null)
   const [refresh, setRefresh] = useState(false)
+  const navigate = useNavigate()
 
   // Fetch current member
   useEffect(() => { 
@@ -31,6 +32,28 @@ const App = () => {
       setCurrentMemberId(memberId)
     }
   },[refresh])
+
+   // Logout user when token expires
+    useEffect(() => {
+    const checkToken = () => {
+      const token = localStorage.getItem('token')
+      if (token) {
+        const decodedToken = jwtDecode(token)
+        const currentTime = Date.now() / 1000
+      
+        if (decodedToken.exp < currentTime) {
+          localStorage.removeItem('token')
+          alert("Istunto on päättynyt, kirjaudutaan ulos...")
+          setCurrentMemberId(null)
+          navigate('/')
+        }
+      }
+    }
+    checkToken()
+
+    const interval = setInterval(checkToken, 60 * 1000)
+    return () => clearInterval(interval)
+  },[navigate])
 
   return (
     <>
