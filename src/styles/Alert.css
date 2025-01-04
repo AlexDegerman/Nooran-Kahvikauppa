@@ -1,0 +1,72 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #1C1C1C;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 250px;
+  width: 60%;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: black;
+}
+
+.message {
+  font-size: 16px;
+  margin-bottom: 24px;
+  color:white;
+}
+
+.alert-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.ok-btn,.cancel-btn {
+  background-color:#1c7030;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500px;
+}
+
+.cancel-btn {
+  background-color: #7e0606;
+  margin-right: auto;
+}
+
+.success .title {
+  color: #28a745;
+}
+
+.error .title {
+  color: #dc3545;
+}
+
+.info .title {
+  color: #17a2b8;
+}
+
+.warning .title {
+  color: #ff0707;
+  text-shadow: 0 0 10px rgb(255, 0, 0), 0 0 15px rgb(255, 0, 0);
+}

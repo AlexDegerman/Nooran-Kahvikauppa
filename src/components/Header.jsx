@@ -1,8 +1,10 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import '../styles/Header.css'
+import { useAlertMessages } from '../hooks/useAlertMessages'
 
 const Header = ({ setCurrentMemberId, currentMemberId }) => {
   const navigate = useNavigate()
+  const { showSuccess } = useAlertMessages()
 
   const handleClick = (category) => {
     let categoryId = 0
@@ -20,7 +22,8 @@ const Header = ({ setCurrentMemberId, currentMemberId }) => {
   // Logs out user when clicking logout button
   const Logout = () => {
     localStorage.removeItem('token')
-    alert("Uloskirjautuminen onnistui!")
+    navigate('/')
+    showSuccess("Uloskirjautuminen onnistui!")
     setCurrentMemberId(null)
   }
 

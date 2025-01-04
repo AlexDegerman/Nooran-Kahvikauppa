@@ -3,12 +3,13 @@ import { Circle, ShoppingCart, Star, StarHalf } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CSService from '../services/CSService'
-
+import { useAlertMessages } from '../hooks/useAlertMessages'
 const ProductList = () => {
   const location = useLocation()
   const { category, categoryId } = location.state || {}
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const { showError } = useAlertMessages()
 
   useEffect(() => {
     setProducts([])
@@ -16,13 +17,14 @@ const ProductList = () => {
       try {
         const response = await CSService.getProductsByMainCategory(categoryId)
         setProducts(response.data)
-      } catch (error) {
-        console.error("Error loading products:", error)
+      } catch {
+        showError("Error loading products.")
       } finally {
         setLoading(false)
       }
     }
     loadProducts()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, category])
   
   // Temporary returns while products load or products are not found

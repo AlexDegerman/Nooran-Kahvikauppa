@@ -3,6 +3,7 @@ import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { useAlertMessages } from '../hooks/useAlertMessages'
 
 const SupplierManager = ({ token }) => {
   const { toimittajat, loading, refreshData } = useDatabase()
@@ -11,6 +12,7 @@ const SupplierManager = ({ token }) => {
   const [selectedSupplierToEditId, setSelectedSupplierToEditId] = useState('')
   const [selectedSupplierToDeleteId, setSelectedSupplierToDeleteId] = useState('')
   const navigate = useNavigate()
+  const {showSuccess, showError, showInfo, showWarning} = useAlertMessages()
   const [supplier, setSupplier] = useState({
     nimi: "",
     yhteyshenkilo: "",
@@ -42,7 +44,7 @@ const SupplierManager = ({ token }) => {
     const { name, value } = event.target
     if (name === "yhteyshenkilonEmail" && value !== '') {
       if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
-        alert("Anna kelvollinen sähköpostiosoite (esimerkiksi: example@example.com).")
+        showInfo("Anna kelvollinen sähköpostiosoite (esimerkiksi: example@example.com).")
         setSupplier(prevSupplier => ({
           ...prevSupplier,
           [name]: ''
@@ -65,12 +67,13 @@ const SupplierManager = ({ token }) => {
           yhteyshenkilo: supplierData.yhteyshenkilo,
           yhteyshenkilonEmail: supplierData.yhteyshenkilonEmail
         })
-      } catch (error) {
-        console.error('Error fetching supplier details:', error)
+      } catch {
+        showError('Error fetching supplier details:')
       }
     }
 
     fetchSupplierDetails()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSupplierToEditId])
 
   const handleSupplierToEditSelect = (event) => {
@@ -86,15 +89,15 @@ const SupplierManager = ({ token }) => {
     try {
       await CSService.addSupplier(supplier, token)
       refreshData()
-      alert(`Lisätty: ${supplier.nimi}`)
+      showSuccess(`Lisätty: ${supplier.nimi}`)
       setShowNewSupplierForm(false)
       setSupplier({ 
         nimi: "",
         yhteyshenkilo: "",
         yhteyshenkilonEmail: ""
       })
-    } catch (error) {
-      console.error("Error adding supplier:", error)
+    } catch {
+      showError("Error adding supplier:")
     }
   }
 
@@ -110,34 +113,39 @@ const SupplierManager = ({ token }) => {
       }
       await CSService.editSupplier(supplierToUpdate, supplierId, token)
       refreshData()
-      alert('Toimittaja päivitetty onnistuneesti!')
+      showSuccess('Toimittaja päivitetty onnistuneesti!')
       setShowEditSupplierForm(false)
-    } catch (error) {
-      console.error('Error updating supplier:', error)
-      alert('Virhe tuotteen päivityksessä')
+    } catch {
+      showError('Virhe tuotteen päivityksessä')
     }
   }
 
-  const deleteSupplier = async (event) => {
-    event.preventDefault()
-    try {
+    const deleteSupplier = (event) => {
+      event.preventDefault()
+    
       if (!selectedSupplierToDeleteId) {
-        alert('Valitse ensin poistettava toimittaja.')
+        showInfo('Valitse ensin poistettava toimittaja.')
         return
       }
-      const confirmDelete = window.confirm('Oletko varma, että haluat poistaa tämän toimittajan?')
-      if (!confirmDelete) {
-        return
-      }
-      const supplierId = Number(selectedSupplierToDeleteId)
-      await CSService.deleteSupplier(supplierId, token)
-      refreshData()
-      alert('Toimittaja poistettu onnistuneesti!')
-    } catch (error) {
-      console.error('Error deleting supplier:', error)
-      alert('Virhe toimittajan poistamisessa')
+    
+      showWarning('Oletko varma, että haluat poistaa tämän toimittajan?', {
+        onConfirm: async () => {
+          try {
+            const supplierId = Number(selectedSupplierToDeleteId)
+            await CSService.deleteSupplier(supplierId, token)
+            refreshData()
+            showSuccess('Toimittaja poistettu onnistuneesti!')
+          } catch {
+            showError('Virhe toimittajan poistamisessa.')
+          }
+        },
+        onCancel: () => {
+          setTimeout(() => {
+            showInfo('Toimittajan poistaminen peruutettu.')
+          }, 100)
+        }
+      })
     }
-  }
 
   if (loading) {
     return <div className="loading">Loading...</div>

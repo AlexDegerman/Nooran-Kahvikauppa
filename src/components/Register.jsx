@@ -3,10 +3,12 @@ import CSService from '../services/CSService'
 import '../styles/Auth.css'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react'
+import { useAlertMessages } from '../hooks/useAlertMessages'
 
 const Register = ({ token }) => {
   const navigate = useNavigate()
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const { showSuccess, showInfo, showError } = useAlertMessages()
   const [formData, setFormData] = useState({
     nickname: "",
     password: "",
@@ -26,7 +28,7 @@ const handleBlur = (event) => {
 
   if (name === "nickname" && value !== '') {
     if (value.length < 3 || value.length > 50) {
-      alert("Käyttäjätunnuksen tulee olla 3-50 merkkiä pitkä")
+      showInfo("Käyttäjätunnuksen tulee olla 3-50 merkkiä pitkä.")
       setFormData(prevData => ({
         ...prevData,
         [name]: ''
@@ -35,7 +37,7 @@ const handleBlur = (event) => {
     }
 
     if (!/^[a-zA-Z0-9_]*$/.test(value)) {
-      alert("Käyttäjätunnus voi sisältää vain kirjaimia, numeroita ja alaviivoja")
+      showInfo("Käyttäjätunnus voi sisältää vain kirjaimia, numeroita ja alaviivoja.")
       setFormData(prevData => ({
         ...prevData,
         [name]: ''
@@ -46,7 +48,7 @@ const handleBlur = (event) => {
 
   if (name === "password" && value !== '') {
     if (!/(?=.*\d)(?=.*[A-Z]).{8,20}/.test(value)) {
-      alert("Salasanassa on oltava vähintään yksi numero ja yksi iso kirjain, pituus 8-20 merkkiä")
+      showInfo("Salasanassa on oltava vähintään yksi numero ja yksi iso kirjain, pituus 8-20 merkkiä.")
       setFormData(prevData => ({
         ...prevData,
         [name]: ''
@@ -57,7 +59,7 @@ const handleBlur = (event) => {
 
   if (name === "email" && value !== '') {
     if (!/^[A-Za-z0-9+_.-]+@(.+)$/.test(value)) {
-      alert("Anna kelvollinen sähköpostiosoite (esimerkiksi: example@example.com).")
+      showInfo("Anna kelvollinen sähköpostiosoite (esimerkiksi: example@example.com).")
       setFormData(prevData => ({
         ...prevData,
         [name]: ''
@@ -65,7 +67,7 @@ const handleBlur = (event) => {
       return
     }
     if (value.length > 100) {
-      alert("Sähköposti voi olla enintään 100 merkkiä pitkä")
+      showInfo("Sähköposti voi olla enintään 100 merkkiä pitkä.")
       setFormData(prevData => ({
         ...prevData,
         [name]: ''
@@ -84,11 +86,11 @@ const handleBlur = (event) => {
         email: formData.email,
         token
       })
-      alert(`Käyttäjä ${formData.nickname} rekisteröity onnistuneesti`)
+      showSuccess(`Käyttäjä ${formData.nickname} rekisteröity onnistuneesti`)
 
       setFormData({ nickname: '', email: '', password: '' })
-    } catch (error) {
-      console.error("Rekisteröinti epäonnistui ", error)
+    } catch {
+      showError("Rekisteröinti epäonnistui.")
     }
   }
 

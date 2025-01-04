@@ -3,6 +3,7 @@ import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { useAlertMessages } from '../hooks/useAlertMessages'
 
 const ManufacturerManager = ({ token }) => {
   const { valmistajat, loading, refreshData } = useDatabase()
@@ -11,6 +12,7 @@ const ManufacturerManager = ({ token }) => {
   const [selectedManufacturerToEditId, setSelectedManufacturerToEditId] = useState('')
   const [selectedManufacturerToDeleteId, setSelectedManufacturerToDeleteId] = useState('')
   const navigate = useNavigate()
+  const {showSuccess, showError, showInfo, showWarning } = useAlertMessages()
   const [manufacturer, setManufacturer] = useState({
     nimi: "",
     url: ""
@@ -40,7 +42,7 @@ const ManufacturerManager = ({ token }) => {
     const { name, value } = event.target
     if (name === "url" && value !== '') {
       if (!/^(https?:\/\/)?(www\.)[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(value)) {
-        alert("Anna kelvollinen URL-osoite (esimerkiksi: www.example.com).")
+        showInfo("Anna kelvollinen URL-osoite (esimerkiksi: www.example.com).")
         setManufacturer(prevManufacturer => ({
           ...prevManufacturer,
           [name]: ''
@@ -62,12 +64,13 @@ const ManufacturerManager = ({ token }) => {
           nimi: manufacturerData.nimi,
           url: manufacturerData.url
         })
-      } catch (error) {
-        console.error('Error fetching manufacturer details:', error)
+      } catch {
+        showError('Error fetching manufacturer details.')
       }
     }
 
     fetchManufacturerDetails()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedManufacturerToEditId])
 
   const handleManufacturerToEditSelect = (event) => {
@@ -83,14 +86,14 @@ const ManufacturerManager = ({ token }) => {
     try {
       await CSService.addManufacturer(manufacturer, token)
       refreshData()
-      alert(`Lisätty: ${manufacturer.nimi}`)
+      showSuccess(`Lisätty: ${manufacturer.nimi}`)
       setShowNewManufacturerForm(false)
       setManufacturer({ 
         nimi: "",
         url: ""
       })
-    } catch (error) {
-      console.error("Error adding manufacturer:", error)
+    } catch {
+      showError("Error adding manufacturer.")
     }
   }
 
@@ -106,34 +109,40 @@ const ManufacturerManager = ({ token }) => {
       }
       await CSService.editManufacturer(manufacturerToUpdate, manufacturerId, token)
       refreshData()
-      alert('Valmistaja päivitetty onnistuneesti!')
+      showSuccess('Valmistaja päivitetty onnistuneesti!')
       setShowEditManufacturerForm(false)
-    } catch (error) {
-      console.error('Error updating manufacturer:', error)
-      alert('Virhe tuotteen päivityksessä')
+    } catch {
+      showError('Virhe tuotteen päivityksessä')
     }
   }
 
-  const deleteManufacturer = async (event) => {
+  const deleteManufacturer = (event) => {
     event.preventDefault()
-    try {
-      if (!selectedManufacturerToDeleteId) {
-        alert('Valitse ensin poistettava valmistaja.')
-        return
-      }
-      const confirmDelete = window.confirm('Oletko varma, että haluat poistaa tämän valmistajan?')
-      if (!confirmDelete) {
-        return
-      }
-      const manufacturerId = Number(selectedManufacturerToDeleteId)
-      await CSService.deleteManufacturer(manufacturerId, token)
-      refreshData()
-      alert('Valmistaja poistettu onnistuneesti!')
-    } catch (error) {
-      console.error('Error deleting manufacturer:', error)
-      alert('Virhe valmistajan poistamisessa')
+  
+    if (!selectedManufacturerToDeleteId) {
+      showInfo('Valitse ensin poistettava valmistaja.')
+      return
     }
+  
+    showWarning('Oletko varma, että haluat poistaa tämän valmistajan?', {
+      onConfirm: async () => {
+        try {
+          const manufacturerId = Number(selectedManufacturerToDeleteId)
+          await CSService.deleteManufacturer(manufacturerId, token)
+          refreshData()
+          showSuccess('Valmistaja poistettu onnistuneesti!')
+        } catch {
+          showError('Virhe valmistajan poistamisessa.')
+        }
+      },
+      onCancel: () => {
+        setTimeout(() => {
+          showInfo('Valmistajan poistaminen peruutettu.')
+        }, 100)
+      }
+    })
   }
+  
 
   if (loading) {
     return <div className="loading">Loading...</div>

@@ -14,20 +14,20 @@ import ProtectedRoute from './components/ProtectedRoute'
 import AccessDenied from './components/AccessDenied'
 import { useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
+import { useAlertMessages } from './hooks/useAlertMessages'
 
 const App = () => {
   const [currentMemberId, setCurrentMemberId] = useState()
   const [token, setToken] = useState(null)
   const [refresh, setRefresh] = useState(false)
   const navigate = useNavigate()
-
+  const { showInfo } = useAlertMessages()
   // Fetch current member
   useEffect(() => { 
     const token = localStorage.getItem('token')
     if (token) {
       const decodedToken = jwtDecode(token)
       const memberId = decodedToken.id
-      console.log(decodedToken)
       setToken(token)
       setCurrentMemberId(memberId)
     }
@@ -43,7 +43,7 @@ const App = () => {
       
         if (decodedToken.exp < currentTime) {
           localStorage.removeItem('token')
-          alert("Istunto on päättynyt, kirjaudutaan ulos...")
+          showInfo("Istunto on päättynyt, kirjaudutaan ulos...")
           setCurrentMemberId(null)
           navigate('/')
         }
@@ -53,6 +53,7 @@ const App = () => {
 
     const interval = setInterval(checkToken, 60 * 1000)
     return () => clearInterval(interval)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[navigate])
 
   return (

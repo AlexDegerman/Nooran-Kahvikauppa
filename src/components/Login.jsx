@@ -2,10 +2,12 @@ import { useState } from "react"
 import CSService from '../services/CSService'
 import { useNavigate } from "react-router-dom"
 import { Eye, EyeOff } from "lucide-react"
+import { useAlertMessages } from '../hooks/useAlertMessages'
 
 export const Login = ({ setRefresh }) => {
   const navigate = useNavigate()
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const { showSuccess, showError } = useAlertMessages()
   const [credentials, setCredentials] = useState({
     nickname: '',
     password: ''
@@ -27,11 +29,11 @@ export const Login = ({ setRefresh }) => {
         salasana: credentials.password,
       })
       localStorage.setItem('token', res.data.token)
-      alert("Kirjautuminen onnistui!")
+      showSuccess("Kirjautuminen onnistui!")
       setRefresh(prev => !prev)
       navigate("/")
     } catch {
-      console.error("Kirjautuminen epäonnistui")
+      showError("Kirjautuminen epäonnistui")
     }
   }
 

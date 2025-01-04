@@ -4,6 +4,7 @@ import { useDatabase } from '../hooks/useDatabase'
 import CSService from '../services/CSService'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useAlertMessages } from '../hooks/useAlertMessages'
 
 const ProductManager = ({ token }) => {
   const { tuotteet, valmistajat, toimittajat, loading, refreshData } = useDatabase()
@@ -11,6 +12,7 @@ const ProductManager = ({ token }) => {
   const [showEditProductForm, setShowEditProductForm] = useState(false)
   const [selectedProductToEditId, setSelectedProductToEditId] = useState('')
   const [selectedProductToDeleteId, setSelectedProductToDeleteId] = useState('')
+  const {showSuccess, showError, showInfo, showWarning} = useAlertMessages()
   const navigate = useNavigate()
   const [product, setProduct] = useState({
     nimi: "",
@@ -50,7 +52,7 @@ const ProductManager = ({ token }) => {
     const { name, value } = event.target
     if (name === "tuotekuvalinkki" && value !== '') {
       if (!/\.(jpeg|jpg|png)$/i.test(value) || !/^https?:\/\/.+$/i.test(value)) {
-        alert("Anna kelvollinen kuvalinkki, jonka pääte on .jpeg, .jpg tai .png.")
+        showInfo("Anna kelvollinen kuvalinkki, jonka pääte on .jpeg, .jpg tai .png.")
         setProduct(prevProduct => ({
           ...prevProduct,
           [name]: ''
@@ -60,7 +62,7 @@ const ProductManager = ({ token }) => {
     }
     if (name === "hinta" && value !== '') {
       if (!/^\d+([,.])\d{0,2}$|^\d+$/.test(value)) {
-        alert("Anna kelvollinen hinta (esim. 29,99 tai 29.99).")
+        showInfo("Anna kelvollinen hinta (esim. 29,99 tai 29.99).")
         setProduct(prevProduct => ({
           ...prevProduct,
           [name]: ''
@@ -86,12 +88,13 @@ const ProductManager = ({ token }) => {
           valmistaja_id: productData.valmistaja.id,
           toimittaja_id: productData.toimittaja.id
         })
-      } catch (error) {
-        console.error('Error fetching product details:', error)
+      } catch {
+        showError('Error fetching product details.')
       }
     }
 
     fetchProductDetails()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProductToEditId])
 
   const handleProductToEditSelect = (event) => {
@@ -110,7 +113,7 @@ const ProductManager = ({ token }) => {
     try {
       await CSService.addProduct(newProduct, token)
       refreshData()
-      alert(`Lisätty: ${product.nimi}`)
+      showSuccess(`Lisätty: ${product.nimi}`)
       setShowNewProductForm(false)
       setProduct({ 
         nimi: "", 
@@ -121,8 +124,8 @@ const ProductManager = ({ token }) => {
         valmistaja_id: "", 
         toimittaja_id: "" 
       })
-    } catch (error) {
-      console.error("Error adding product:", error)
+    } catch {
+      showError("Error adding product.")
     }
   }
 
@@ -143,33 +146,38 @@ const ProductManager = ({ token }) => {
   
       await CSService.editProduct(productToUpdate, productId, token)
       refreshData()
-      alert('Tuote päivitetty onnistuneesti!')
+      showSuccess('Tuote päivitetty onnistuneesti!')
       setShowEditProductForm(false)
-    } catch (error) {
-      console.error('Error updating product:', error)
-      alert('Virhe tuotteen päivityksessä')
+    } catch {
+      showError, ('Virhe tuotteen päivityksessä')
     }
   }
 
-  const deleteProduct = async (event) => {
+  const deleteProduct = (event) => {
     event.preventDefault()
-    try {
-      if (!selectedProductToDeleteId) {
-        alert('Valitse ensin poistettava tuote.')
-        return
-      }
-      const confirmDelete = window.confirm('Oletko varma, että haluat poistaa tämän tuotteen?')
-      if (!confirmDelete) {
-        return
-      }
-      const productId = Number(selectedProductToDeleteId)
-      await CSService.deleteProduct(productId, token)
-      refreshData()
-      alert('Tuote poistettu onnistuneesti!')
-    } catch (error) {
-      console.error('Error deleting product:', error)
-      alert('Virhe tuotteen poistamisessa')
+  
+    if (!selectedProductToDeleteId) {
+      showInfo('Valitse ensin poistettava tuote.')
+      return
     }
+  
+    showWarning('Oletko varma, että haluat poistaa tämän tuotteen?', {
+      onConfirm: async () => {
+        try {
+          const productId = Number(selectedProductToDeleteId)
+          await CSService.deleteProduct(productId, token)
+          refreshData()
+          showSuccess('Tuote poistettu onnistuneesti!')
+        } catch {
+          showError('Virhe tuotteen poistamisessa.')
+        }
+      },
+      onCancel: () => {
+        setTimeout(() => {
+          showInfo('Tuotteen poistaminen peruutettu.')
+        }, 100)
+      }
+    })
   }
 
   if (loading) {

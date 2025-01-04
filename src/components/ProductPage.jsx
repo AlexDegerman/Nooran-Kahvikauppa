@@ -3,12 +3,14 @@ import { useNavigate, useParams } from "react-router-dom"
 import CSService from "../services/CSService"
 import '../styles/ProductPage.css'
 import { ArrowLeft } from 'lucide-react'
+import { useAlertMessages } from "../hooks/useAlertMessages"
 
 const ProductPage = () => {
   const navigate = useNavigate()
   const { index } = useParams()
   const [product, setProduct] = useState({})
   const [loading, setLoading] = useState(true)
+  const { showError } = useAlertMessages()
 
   // Fetch currently viewed product
   useEffect(() => {
@@ -17,14 +19,15 @@ const ProductPage = () => {
         try {
           const response = await CSService.getProductById(index)
           setProduct(response.data)
-        } catch (error) {
-          console.error("Error fetching product:", error)
+        } catch {
+          showError("Error fetching product.")
         } finally {
           setLoading(false)
         }
       }
     }
     fetchProduct()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
   // Temporary returns while product loads or product is not found
