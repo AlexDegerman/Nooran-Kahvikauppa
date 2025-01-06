@@ -4,18 +4,35 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CSService from '../services/CSService'
 import { useAlertMessages } from '../hooks/useAlertMessages'
+import { useDebounce } from '../hooks/useDebounce'
+import Filter from './Filter'
+
 const ProductList = () => {
   const location = useLocation()
   const { category, categoryId } = location.state || {}
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const { showError } = useAlertMessages()
+  const [search, setSearch] = useState("")
+  const [genre, setGenre] = useState("")
+  const debouncedSearch = useDebounce(search, 500)
 
   useEffect(() => {
+    if (location.pathname === '/tuotelista') {
     setProducts([])
     const loadProducts = async () => {
       try {
-        const response = await CSService.getProductsByMainCategory(categoryId)
+        let response
+        
+        // If there's a search term or genre selected, use search endpoint
+        if (debouncedSearch || genre) {
+          response = await CSService.searchProducts(debouncedSearch, genre)
+        } 
+        // Otherwise, load products by main category
+        else {
+          response = await CSService.getProductsByMainCategory(categoryId)
+        }
+
         setProducts(response.data)
       } catch {
         showError("Error loading products.")
@@ -23,44 +40,55 @@ const ProductList = () => {
         setLoading(false)
       }
     }
+    
     loadProducts()
+  }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId, category])
-  
-  // Temporary returns while products load or products are not found
-  if (loading) {
-    return <div className="loading">Loading product...</div>
-  }
-  if (!products || Object.keys(products).length === 0) {
-    return <div className="loading">Products not found</div>
-  }
+  }, [categoryId, category, debouncedSearch, genre, location.pathname])
 
-    return (
-      <div className="main-content"> 
-        <h1>{category}</h1>
-        <ul className="product-list">
-          {products.map((product, index) => (
-            <div key={index} className="product-card">
-              <Link className="product-card-image" to={`/tuote/${product.id}`}><img src={product.tuotekuvalinkki} alt={product.nimi}/></Link>
-              <ul className="product-list-details">
-                <li className="product-card-detail-value">
-                    <span className="product-card-price">${product.hinta}</span><ShoppingCart className="shopping-cart"/>
-                </li>
-                <li className="product-card-detail-value">
-                <Link className="product-card-link" to={`/tuote/${product.id}`}>{product.nimi}</Link>
-                </li>
-                <li className="product-card-detail-value">
-                <Circle size="10px" className="product-card-circle" /> 1-2 työpäivää
-                </li>
-                <li className="product-card-detail-value">
-                  <Star size="15px" className="star"/><Star size="15px" className="star"/><Star size="15px" className="star"/><StarHalf size="15px" className="star"/>
-                </li>
-              </ul>
-            </div>
-          ))}
-        </ul>
-      </div>
-    )
-  }
+  return (
+    <div className="main-content">
+      <Filter search={search} setSearch={setSearch} genre={genre} setGenre={setGenre} />
+      {loading ? (
+        <div className="loading">Ladataan tuotteita...</div>
+      ) : !products || Object.keys(products).length === 0 ? (
+        <div className="loading">Tuotteita ei löytynyt.</div>
+      ) : (
+        <>
+          <h1>{category}</h1>
+          <ul className="product-list">
+            {products.map((product, index) => (
+              <div key={index} className="product-card">
+                <Link className="product-card-image" to={`/tuote/${product.id}`}>
+                  <img src={product.tuotekuvalinkki} alt={product.nimi} />
+                </Link>
+                <ul className="product-list-details">
+                  <li className="product-card-detail-value">
+                    <span className="product-card-price">${product.hinta}</span>
+                    <ShoppingCart className="shopping-cart" />
+                  </li>
+                  <li className="product-card-detail-value">
+                    <Link className="product-card-link" to={`/tuote/${product.id}`}>
+                      {product.nimi}
+                    </Link>
+                  </li>
+                  <li className="product-card-detail-value">
+                    <Circle size={10} className="product-card-circle" /> 1-2 työpäivää
+                  </li>
+                  <li className="product-card-detail-value">
+                    <Star size={15} className="star" />
+                    <Star size={15} className="star" />
+                    <Star size={15} className="star" />
+                    <StarHalf size={15} className="star" />
+                  </li>
+                </ul>
+              </div>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  )
+}
 
 export default ProductList

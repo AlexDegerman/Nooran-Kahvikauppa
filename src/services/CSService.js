@@ -111,4 +111,14 @@ const Login = (nickname, password) => {
   return axios.post(`${baseUrl}/api/auth/kirjaudu`, nickname, password)
 }
 
-export default {getProductsByMainCategory, getProductById, getAllSuppliers, addProduct, editProduct, getAllProducts, deleteProduct, addSupplier, editSupplier, deleteSupplier, getSupplierById, getAllManufacturers, addManufacturer, getManufacturerById, editManufacturer, deleteManufacturer, registerMember, Login}
+const searchProducts = (searchTerm, osastoId) => {
+  const params = new URLSearchParams()
+  
+  if (searchTerm) params.append('name', searchTerm)
+  if (osastoId) params.append('osastoId', osastoId)
+  
+  return axios.get(`${baseUrl}/api/tuotteet/hae?${params.toString()}`)
+}
+
+
+export default {getProductsByMainCategory, getProductById, getAllSuppliers, addProduct, editProduct, getAllProducts, deleteProduct, addSupplier, editSupplier, deleteSupplier, getSupplierById, getAllManufacturers, addManufacturer, getManufacturerById, editManufacturer, deleteManufacturer, registerMember, Login, searchProducts}

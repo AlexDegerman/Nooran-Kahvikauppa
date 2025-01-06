@@ -101,5 +101,19 @@ public class TuoteService {
 
     tuoteRepository.delete(tuote);
   }
+
+  // Search methods
+  public List<Tuote> searchByName(String searchTerm) {
+    return tuoteRepository.findByNimiContainingIgnoreCase(searchTerm);
+  }
+
+  public List<Tuote> searchByOsasto(Long osastoId) {
+      return tuoteRepository.findByOsastoId(osastoId);
+  }
+
+  public List<Tuote> searchByNameAndOsasto(String searchTerm, Long osastoId) {
+      return tuoteRepository.findByNimiContainingAndOsastoId(searchTerm, osastoId);
+  }
+
 }
 

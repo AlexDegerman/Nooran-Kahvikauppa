@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,31 @@ public class TuoteController {
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(e.getMessage());
+    }
+  }
+
+  @GetMapping("/hae")
+  public ResponseEntity<List<Tuote>> searchProducts(
+    @RequestParam(required = false) String name,
+    @RequestParam(required = false) Long osastoId
+  ) {
+    try {
+      List<Tuote> results;
+
+      if (name != null && osastoId != null) {
+          results = tuoteService.searchByNameAndOsasto(name, osastoId);
+      } else if (name != null) {
+          results = tuoteService.searchByName(name);
+      } else if (osastoId != null) {
+          results = tuoteService.searchByOsasto(osastoId);
+      } else {
+        return ResponseEntity.ok(new ArrayList<>());
+      }
+
+      return ResponseEntity.ok(results);
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body(new ArrayList<>());
     }
   }
 }

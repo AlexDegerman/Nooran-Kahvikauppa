@@ -28,4 +28,17 @@ public interface TuoteRepository extends JpaRepository<Tuote, Long> {
     WHERE t.osasto_id IN (SELECT id FROM CategoryHierarchy)
     """, nativeQuery = true)
   List<Tuote> getProductsUnderMainCategory(@Param("categoryId") Long categoryId);
+
+  @Query("SELECT t FROM Tuote t WHERE LOWER(t.nimi) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+  List<Tuote> findByNimiContainingIgnoreCase(@Param("searchTerm") String searchTerm);
+    
+  @Query("SELECT t FROM Tuote t WHERE t.osasto.id = :osastoId")
+  List<Tuote> findByOsastoId(@Param("osastoId") Long osastoId);
+    
+  @Query("SELECT t FROM Tuote t WHERE LOWER(t.nimi) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+    "AND t.osasto.id = :osastoId")
+  List<Tuote> findByNimiContainingAndOsastoId(
+      @Param("searchTerm") String searchTerm, 
+      @Param("osastoId") Long osastoId
+  );
 }
