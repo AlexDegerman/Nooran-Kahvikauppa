@@ -32,10 +32,10 @@ const ProductPage = () => {
 
   // Temporary returns while product loads or product is not found
   if (loading) {
-    return <div className="loading">Loading product...</div>
+    return <div className="loading">Ladataan tuotetta...</div>
   }
   if (!product || Object.keys(product).length === 0) {
-    return <div className="loading">Product not found</div>
+    return <div className="loading">Tuotetta ei löytynyt.</div>
   }
 
 

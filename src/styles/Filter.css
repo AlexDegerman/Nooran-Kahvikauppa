@@ -17,10 +17,9 @@
   align-items: center;
   margin: 0;
   justify-content: center;
-  position: fixed;
+  position: relative;
   width: 100%;
   top: 0;
-  z-index: 1000;
 }
 .filter > * {
   max-width: 200px;

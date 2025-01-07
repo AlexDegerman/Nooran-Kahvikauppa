@@ -48,14 +48,16 @@ const ProductList = () => {
 
   return (
     <div className="main-content">
+      {!loading && products && Object.keys(products).length > 0 && (
+        <h1>{category}</h1>
+      )}
       <Filter search={search} setSearch={setSearch} genre={genre} setGenre={setGenre} />
       {loading ? (
         <div className="loading">Ladataan tuotteita...</div>
       ) : !products || Object.keys(products).length === 0 ? (
         <div className="loading">Tuotteita ei löytynyt.</div>
       ) : (
-        <>
-          <h1>{category}</h1>
+        <> 
           <ul className="product-list">
             {products.map((product, index) => (
               <div key={index} className="product-card">

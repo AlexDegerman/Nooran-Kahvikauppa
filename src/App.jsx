@@ -17,44 +17,58 @@ import { jwtDecode } from 'jwt-decode'
 import { useAlertMessages } from './hooks/useAlertMessages'
 
 const App = () => {
-  const [currentMemberId, setCurrentMemberId] = useState()
+  const [currentMemberId, setCurrentMemberId] = useState(null)
   const [token, setToken] = useState(null)
   const [refresh, setRefresh] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
   const { showInfo } = useAlertMessages()
-  // Fetch current member
-  useEffect(() => { 
-    const token = localStorage.getItem('token')
-    if (token) {
-      const decodedToken = jwtDecode(token)
-      const memberId = decodedToken.id
-      setToken(token)
-      setCurrentMemberId(memberId)
-    }
-  },[refresh])
 
-   // Logout user when token expires
-    useEffect(() => {
+  // Fetch current member
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('token')
+      if (token) {
+        const decodedToken = jwtDecode(token)
+        setToken(token)
+        setCurrentMemberId(decodedToken.id)
+      } else {
+        setCurrentMemberId(null)
+        setToken(null)
+      }
+      setIsLoading(false)
+    }
+    
+    checkAuth()
+  }, [refresh])
+
+  // Logout user when token expires
+  useEffect(() => {
     const checkToken = () => {
       const token = localStorage.getItem('token')
       if (token) {
         const decodedToken = jwtDecode(token)
         const currentTime = Date.now() / 1000
-      
+
         if (decodedToken.exp < currentTime) {
           localStorage.removeItem('token')
           showInfo("Istunto on päättynyt, kirjaudutaan ulos...")
           setCurrentMemberId(null)
+          setToken(null)
           navigate('/')
         }
       }
     }
+    
     checkToken()
-
     const interval = setInterval(checkToken, 60 * 1000)
     return () => clearInterval(interval)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[navigate])
+  }, [navigate])
+
+  if (isLoading) {
+    return null
+  }
 
   return (
     <>
@@ -65,42 +79,41 @@ const App = () => {
         <Route path="/tuote/:index" element={<ProductPage/>}/>
         <Route path="/kirjautuminen" element={<Login setRefresh={setRefresh}/>}/>        
         <Route path="/paasy-kielletty" element={<AccessDenied/>}/>
-
         {/* Secured routes */}
-        <Route 
-          path="/rekisteroiminen" 
+        <Route
+          path="/rekisteroiminen"
           element={
             <ProtectedRoute userId={currentMemberId}>
               <Register token={token}/>
             </ProtectedRoute>
           }
         />
-        <Route 
-          path="/hallintapaneeli" 
+        <Route
+          path="/hallintapaneeli"
           element={
             <ProtectedRoute userId={currentMemberId}>
               <AdminPage/>
             </ProtectedRoute>
           }
         />
-        <Route 
-          path="/tuotteenhallinta" 
+        <Route
+          path="/tuotteenhallinta"
           element={
             <ProtectedRoute userId={currentMemberId}>
               <ProductManager token={token}/>
             </ProtectedRoute>
           }
         />
-        <Route 
-          path="/toimittajanhallinta" 
+        <Route
+          path="/toimittajanhallinta"
           element={
             <ProtectedRoute userId={currentMemberId}>
               <SupplierManager token={token}/>
-            </ProtectedRoute> 
+            </ProtectedRoute>
           }
         />
-        <Route 
-          path="/valmistajanhallinta" 
+        <Route
+          path="/valmistajanhallinta"
           element={
             <ProtectedRoute userId={currentMemberId}>
               <ManufacturerManager token={token}/>
