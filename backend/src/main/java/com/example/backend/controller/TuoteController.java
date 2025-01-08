@@ -15,6 +15,7 @@ import com.example.backend.service.TuoteService;
 
 import jakarta.validation.Valid;
 
+// Handles product-related operations, including retrieving products, searching, and managing (adding, updating, deleting) product data
 @RestController
 @RequestMapping("/api/tuotteet")
 public class TuoteController {

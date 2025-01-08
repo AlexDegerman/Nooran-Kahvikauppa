@@ -16,6 +16,7 @@ import com.example.backend.repository.RooliRepository;
 
 import lombok.RequiredArgsConstructor;
 
+// Manages user registration, authentication, and role assignments
 @Service
 @RequiredArgsConstructor
 public class KayttajaService implements UserDetailsService {

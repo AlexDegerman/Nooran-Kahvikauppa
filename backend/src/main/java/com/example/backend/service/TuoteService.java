@@ -15,6 +15,7 @@ import com.example.backend.repository.ToimittajaRepository;
 import com.example.backend.repository.TuoteRepository;
 import com.example.backend.repository.ValmistajaRepository;
 
+// Manages product-related operations including CRUD and search.
 @Service
 public class TuoteService {
   
@@ -70,7 +71,7 @@ public class TuoteService {
     return tuoteRepository.save(tuote);
   }
 
-  //Edit existing product
+  // Edit existing product
   public Tuote updateTuote(Long id, TuoteDTO tuoteDTO) {
     Tuote existingTuote = tuoteRepository.findById(id)
       .orElseThrow(() -> new RuntimeException("Tuote not found with id: " + id));
@@ -94,7 +95,7 @@ public class TuoteService {
     return tuoteRepository.save(existingTuote);
   }
 
-  //Delete existing product
+  // Delete existing product
   public void deleteTuote(Long id) {
     Tuote tuote = tuoteRepository.findById(id)
       .orElseThrow(() -> new RuntimeException("Tuote not found with id: " + id));
@@ -114,6 +115,4 @@ public class TuoteService {
   public List<Tuote> searchByNameAndOsasto(String searchTerm, Long osastoId) {
       return tuoteRepository.findByNimiContainingAndOsastoId(searchTerm, osastoId);
   }
-
 }
-

@@ -23,6 +23,8 @@ import com.example.backend.model.Kayttaja;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+// Handles user authentication and registration-related API endpoints
+// Includes endpoints for user login and registration, with JWT token generation
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor

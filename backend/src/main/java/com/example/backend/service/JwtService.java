@@ -15,6 +15,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 
+// Handles JWT generation, validation, and extraction of claims
 @Service
 public class JwtService {
   @Value("${jwt.secret}")

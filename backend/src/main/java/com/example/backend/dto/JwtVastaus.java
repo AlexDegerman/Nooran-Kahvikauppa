@@ -3,6 +3,7 @@ package com.example.backend.dto;
 import java.util.Set;
 import lombok.Data;
 
+// Represents the response containing JWT token details, user information, and roles returned after successful authentication
 @Data
 public class JwtVastaus {
   private String token;

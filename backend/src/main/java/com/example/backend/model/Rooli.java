@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Entity representing a role in the system.
+// Roles define the authorities assigned to a user
 @Entity
 @Data
 @NoArgsConstructor

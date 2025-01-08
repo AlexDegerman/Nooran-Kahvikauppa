@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+// Manages manufacturer-related operations such as retrieving, adding, updating, and deleting manufacturers via API endpoints
 @RestController
 @RequestMapping("api/valmistajat")
 public class ValmistajaController {

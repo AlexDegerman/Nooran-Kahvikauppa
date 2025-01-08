@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { Eye, EyeOff } from "lucide-react"
 import { useAlertMessages } from '../hooks/useAlertMessages'
 
+// This component displays a login page
 export const Login = ({ setRefresh }) => {
   const navigate = useNavigate()
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
@@ -21,6 +22,7 @@ export const Login = ({ setRefresh }) => {
     }))
   }
 
+  // Log in user
   const Login = async (e) => {
     e.preventDefault()
     try {

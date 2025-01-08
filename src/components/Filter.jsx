@@ -1,13 +1,13 @@
 import '../styles/Filter.css'
 
-// This component displays a search bar and a genre selector
-const Filter = ( {setSearch, search, genre, setGenre}) => {
+// This component displays a search bar and a category selector
+const Filter = ( {setSearch, search, productCategory, setCategory}) => {
   const handleSearch = (event) => {
     setSearch(event.target.value)
   }
 
-  const handleGenre = (event) => {
-    setGenre(event.target.value)
+  const handleCategory = (event) => {
+    setCategory(event.target.value)
   }
 
   return (
@@ -17,13 +17,13 @@ const Filter = ( {setSearch, search, genre, setGenre}) => {
         <label>Etsi tuotteita niiden nimellä</label>
         <input value={search} onChange={handleSearch} className="search-input" placeholder="Etsi"/>
       </div>
-      {/* Genre Selector */}
+      {/* Category Selector */}
       <div className="category-window">
         <label>Suodata lajityypin mukaan</label>
             <select
               name="osasto_id"
-              value={genre}
-              onChange={handleGenre}
+              value={productCategory}
+              onChange={handleCategory}
               required
             >
               <option value="">Valitse osasto</option>

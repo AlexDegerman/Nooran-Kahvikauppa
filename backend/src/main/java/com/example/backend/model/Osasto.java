@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Entity representing a category in the system
+// Supports hierarchical relationships through a parent-child structure
 @Data
 @NoArgsConstructor
 @Entity

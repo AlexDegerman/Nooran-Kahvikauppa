@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import '../styles/AdminPage.css'
-
+// This component displays a variety of actions for the administrator
 const AdminPage = () => {
 
   return (

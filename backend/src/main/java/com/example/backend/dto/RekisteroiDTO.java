@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+// Data Transfer Object for user registration requests. Includes fields for username, email, and password with validation rules
 @Data
 public class RekisteroiDTO {
   @NotBlank

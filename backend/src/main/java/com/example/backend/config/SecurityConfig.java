@@ -23,6 +23,7 @@ import com.example.backend.service.JwtService;
 import java.util.Arrays;
 import java.util.List;
 
+// Security configuration class that sets up authentication, JWT filtering, CORS, and access control for the application
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

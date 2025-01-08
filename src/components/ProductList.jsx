@@ -6,7 +6,7 @@ import CSService from '../services/CSService'
 import { useAlertMessages } from '../hooks/useAlertMessages'
 import { useDebounce } from '../hooks/useDebounce'
 import Filter from './Filter'
-
+// This component displays a list of products with search support
 const ProductList = () => {
   const location = useLocation()
   const { category, categoryId } = location.state || {}
@@ -14,7 +14,7 @@ const ProductList = () => {
   const [loading, setLoading] = useState(true)
   const { showError } = useAlertMessages()
   const [search, setSearch] = useState("")
-  const [genre, setGenre] = useState("")
+  const [productCategory, setProductCategory] = useState("")
   const debouncedSearch = useDebounce(search, 500)
 
   useEffect(() => {
@@ -24,9 +24,9 @@ const ProductList = () => {
       try {
         let response
         
-        // If there's a search term or genre selected, use search endpoint
-        if (debouncedSearch || genre) {
-          response = await CSService.searchProducts(debouncedSearch, genre)
+        // If there's a search term or category selected, use search endpoint
+        if (debouncedSearch || productCategory) {
+          response = await CSService.searchProducts(debouncedSearch, productCategory)
         } 
         // Otherwise, load products by main category
         else {
@@ -44,20 +44,23 @@ const ProductList = () => {
     loadProducts()
   }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId, category, debouncedSearch, genre, location.pathname])
+  }, [categoryId, category, debouncedSearch, productCategory, location.pathname])
 
   return (
     <div className="main-content">
       {!loading && products && Object.keys(products).length > 0 && (
         <h1>{category}</h1>
       )}
-      <Filter search={search} setSearch={setSearch} genre={genre} setGenre={setGenre} />
+      {/* Search bar */}
+      <Filter search={search} setSearch={setSearch} productCategory={productCategory} setProductCategory={setProductCategory} />
+      {/* Conditional renders */}
       {loading ? (
         <div className="loading">Ladataan tuotteita...</div>
       ) : !products || Object.keys(products).length === 0 ? (
         <div className="loading">Tuotteita ei löytynyt.</div>
       ) : (
         <> 
+        {/* Product list with product cards */}
           <ul className="product-list">
             {products.map((product, index) => (
               <div key={index} className="product-card">

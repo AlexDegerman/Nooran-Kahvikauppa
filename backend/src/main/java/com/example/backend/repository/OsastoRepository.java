@@ -5,5 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.backend.model.Osasto;
 
+// Repository for accessing category entities from the database
 @Repository
 public interface OsastoRepository extends JpaRepository<Osasto, Long> {}

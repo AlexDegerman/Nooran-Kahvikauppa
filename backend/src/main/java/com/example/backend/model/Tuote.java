@@ -3,6 +3,8 @@ package com.example.backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+// Entity representing a product in the system
+// Includes product details and associations with category, manufacturer, and supplier
 @Entity
 @Data
 public class Tuote {

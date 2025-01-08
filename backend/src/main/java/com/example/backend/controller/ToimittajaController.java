@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+// Manages supplier-related operations such as retrieving, adding, updating, and deleting suppliers via API endpoints
 @RestController
 @RequestMapping("api/toimittajat")
 public class ToimittajaController {

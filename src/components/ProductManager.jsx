@@ -5,7 +5,7 @@ import CSService from '../services/CSService'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAlertMessages } from '../hooks/useAlertMessages'
-
+// This component displays a product control panel for the administrator
 const ProductManager = ({ token }) => {
   const { tuotteet, valmistajat, toimittajat, loading, refreshData } = useDatabase()
   const [showNewProductForm, setShowNewProductForm] = useState(false)
@@ -47,7 +47,7 @@ const ProductManager = ({ token }) => {
       [name]: value
     }))
   }
-
+  // Validate product image link and price
   const handleBlur = (event) => {
     const { name, value } = event.target
     if (name === "tuotekuvalinkki" && value !== '') {
@@ -103,7 +103,7 @@ const ProductManager = ({ token }) => {
   const handleProductToDeleteSelect = (event) => {
     setSelectedProductToDeleteId(event.target.value)
   }
-  
+  // Add a new product
   const addProduct = async (event) => {
     event.preventDefault()
     const newProduct = {
@@ -128,7 +128,7 @@ const ProductManager = ({ token }) => {
       showError("Error adding product.")
     }
   }
-
+  // Edit existing manufacturer 
   const editProduct = async (event) => {
     event.preventDefault()
     try {
@@ -152,7 +152,7 @@ const ProductManager = ({ token }) => {
       showError, ('Virhe tuotteen päivityksessä')
     }
   }
-
+  // Delete existing manufacturer
   const deleteProduct = (event) => {
     event.preventDefault()
   
@@ -160,7 +160,7 @@ const ProductManager = ({ token }) => {
       showInfo('Valitse ensin poistettava tuote.')
       return
     }
-  
+    // Ask user for confirmation to delete
     showWarning('Oletko varma, että haluat poistaa tämän tuotteen?', {
       onConfirm: async () => {
         try {
@@ -193,11 +193,13 @@ const ProductManager = ({ token }) => {
             <ArrowLeft/>
           </button>
         </div>
+        {/* New Product Form */}
         <h3>Lisää uusi tuote</h3>
         <button onClick={() => setShowNewProductForm(!showNewProductForm)}>
           {!showNewProductForm ? "Näytä lisäys lomake" : "Piilota lisäys lomake"}
         </button>
         {showNewProductForm && (
+          
           <form onSubmit={addProduct} className="new-form">
             <label>Tuotteen nimi</label>
             <input
@@ -282,7 +284,7 @@ const ProductManager = ({ token }) => {
             </button>
           </form>
         )}
-  
+         {/* Edit Product Form */}
         <h3>Muokkaa tuotetta</h3>
         <button onClick={() => setShowEditProductForm(!showEditProductForm)}>
           {!showEditProductForm ? "Näytä muokkaus lomake" : "Piilota muokkaus lomake"}
@@ -393,6 +395,7 @@ const ProductManager = ({ token }) => {
             )}
           </div>
         )}
+        {/* Delete Product Select */}
         <h3>Poista tuote</h3>
         <div className="data-select-container">
             <label>Valitse poistettava tuote</label>

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react'
 import { useAlertMessages } from '../hooks/useAlertMessages'
 
+// This component displays a register form
 const Register = ({ token }) => {
   const navigate = useNavigate()
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
@@ -23,6 +24,7 @@ const Register = ({ token }) => {
     }))
   }
 
+// Validate account nickname, password and email
 const handleBlur = (event) => {
   const { name, value } = event.target
 
@@ -77,6 +79,7 @@ const handleBlur = (event) => {
     }
   }
 
+  // Add new account
   const registerMember = async (event) => {
     event.preventDefault()
     try {

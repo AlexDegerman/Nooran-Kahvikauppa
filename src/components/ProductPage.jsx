@@ -5,6 +5,7 @@ import '../styles/ProductPage.css'
 import { ArrowLeft } from 'lucide-react'
 import { useAlertMessages } from "../hooks/useAlertMessages"
 
+// This component displays a page for a specific product
 const ProductPage = () => {
   const navigate = useNavigate()
   const { index } = useParams()

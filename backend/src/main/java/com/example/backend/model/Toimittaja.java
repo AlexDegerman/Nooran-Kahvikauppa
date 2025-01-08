@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Entity representing a supplier
+// Contains supplier details such as name and contact information
 @Entity
 @Data
 @NoArgsConstructor

@@ -1,5 +1,5 @@
 import '../styles/FrontPage.css'
-
+// This component displays the frontpage of the website
 const FrontPage = () => {
 
   return (

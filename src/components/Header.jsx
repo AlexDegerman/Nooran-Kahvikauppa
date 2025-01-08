@@ -1,11 +1,12 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import '../styles/Header.css'
 import { useAlertMessages } from '../hooks/useAlertMessages'
-
+// This component displays the header
 const Header = ({ setCurrentMemberId, currentMemberId }) => {
   const navigate = useNavigate()
   const { showSuccess } = useAlertMessages()
 
+  // Check if user clicks Kahvilaitteet or Kulutuslaitteet to send the proper category and categoryId in the navigation state
   const handleClick = (category) => {
     let categoryId = 0
   
@@ -31,12 +32,13 @@ const Header = ({ setCurrentMemberId, currentMemberId }) => {
     <header>
       <Link to="/"className="header-title"><h2>Nooran Kahvikauppa</h2></Link>
       <nav className="header-nav-container">
-        {/*Display Admin button to Noora*/}
+        {/*Display admin panel button to Noora*/}
       {currentMemberId === 1 ? (
       <Link to="/hallintapaneeli" className="header-nav-admin">
         <p>Hallintapaneeli</p>
       </Link>
     ) : null}
+    {/* Check login state to display login or logout button */}
     {!currentMemberId ? (
               <NavLink to="/kirjautuminen" className="link">Kirjaudu Sisään</NavLink>
             ) : ( <button onClick={Logout} className="logout">Kirjaudu ulos</button>)}

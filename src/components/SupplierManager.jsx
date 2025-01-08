@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useAlertMessages } from '../hooks/useAlertMessages'
 
+// This component displays a supplier control panel for the administrator
 const SupplierManager = ({ token }) => {
   const { toimittajat, loading, refreshData } = useDatabase()
   const [showNewSupplierForm, setShowNewSupplierForm] = useState(false)
@@ -147,7 +148,7 @@ const SupplierManager = ({ token }) => {
       })
     }
 
-  if (loading) {
+  if (loading) {  
     return <div className="loading">Ladataan...</div>
   }
 
@@ -160,6 +161,7 @@ const SupplierManager = ({ token }) => {
             <ArrowLeft/>
           </button>
         </div>
+        {/* New Supplier Form */}
         <h3>Lisää uusi toimittaja</h3>
         <button onClick={() => setShowNewSupplierForm(!showNewSupplierForm)}>
           {!showNewSupplierForm ? "Näytä lisäys lomake" : "Piilota lisäys lomake"}
@@ -193,7 +195,7 @@ const SupplierManager = ({ token }) => {
             </button>
           </form>
         )}
-  
+         {/* Edit Supplier Form */}
         <h3>Muokkaa toimittajaa</h3>
         <button onClick={() => setShowEditSupplierForm(!showEditSupplierForm)}>
           {!showEditSupplierForm ? "Näytä muokkaus lomake" : "Piilota muokkaus lomake"}
@@ -248,6 +250,7 @@ const SupplierManager = ({ token }) => {
             )}
           </div>
         )}
+        {/* Delete Supplier Select */}
         <h3>Poista toimittaja</h3>
         <div className="Supplier-select-container">
             <label>Valitse poistettava toimittaja</label>

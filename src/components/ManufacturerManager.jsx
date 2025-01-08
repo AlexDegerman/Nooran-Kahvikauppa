@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useAlertMessages } from '../hooks/useAlertMessages'
 
+// This component displays a manufacturer control panel for the administrator
 const ManufacturerManager = ({ token }) => {
   const { valmistajat, loading, refreshData } = useDatabase()
   const [showNewManufacturerForm, setShowNewManufacturerForm] = useState(false)
@@ -38,6 +39,7 @@ const ManufacturerManager = ({ token }) => {
     }))
   }
   
+  // Validate manufacturer link
   const handleBlur = (event) => {
     const { name, value } = event.target
     if (name === "url" && value !== '') {
@@ -80,6 +82,7 @@ const ManufacturerManager = ({ token }) => {
     setSelectedManufacturerToDeleteId(event.target.value)
   }
   
+  // Add a new manufacturer
   const addManufacturer = async (event) => {
     event.preventDefault()
 
@@ -97,6 +100,7 @@ const ManufacturerManager = ({ token }) => {
     }
   }
 
+  // Edit existing manufacturer 
   const editManufacturer = async (event) => {
     event.preventDefault()
     try {
@@ -116,6 +120,7 @@ const ManufacturerManager = ({ token }) => {
     }
   }
 
+  // Delete existing manufacturer
   const deleteManufacturer = (event) => {
     event.preventDefault()
   
@@ -123,7 +128,7 @@ const ManufacturerManager = ({ token }) => {
       showInfo('Valitse ensin poistettava valmistaja.')
       return
     }
-  
+    // Ask user for confirmation to delete
     showWarning('Oletko varma, että haluat poistaa tämän valmistajan?', {
       onConfirm: async () => {
         try {
@@ -143,7 +148,7 @@ const ManufacturerManager = ({ token }) => {
     })
   }
   
-
+  // Conditional render
   if (loading) {
     return <div className="loading">Ladataan...</div>
   }
@@ -157,6 +162,7 @@ const ManufacturerManager = ({ token }) => {
             <ArrowLeft/>
           </button>
         </div>
+        {/* New Manufacturer Form */}
         <h3>Lisää uusi valmistaja</h3>
         <button onClick={() => setShowNewManufacturerForm(!showNewManufacturerForm)}>
           {!showNewManufacturerForm ? "Näytä lisäys lomake" : "Piilota lisäys lomake"}
@@ -183,7 +189,7 @@ const ManufacturerManager = ({ token }) => {
             </button>
           </form>
         )}
-  
+        {/* Edit Manufacturer Form */}
         <h3>Muokkaa valmistajaa</h3>
         <button onClick={() => setShowEditManufacturerForm(!showEditManufacturerForm)}>
           {!showEditManufacturerForm ? "Näytä muokkaus lomake" : "Piilota muokkaus lomake"}
@@ -231,6 +237,7 @@ const ManufacturerManager = ({ token }) => {
             )}
           </div>
         )}
+        {/* Delete Manufacturer Select */}
         <h3>Poista valmistaja</h3>
         <div className="Manufacturer-select-container">
             <label>Valitse poistettava valmistaja</label>

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Entity representing a manufacturer
+// Stores manufacturer details such as name and URL
 @Entity
 @Data
 @NoArgsConstructor

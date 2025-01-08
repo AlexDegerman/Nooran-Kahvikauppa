@@ -71,8 +71,9 @@ const App = () => {
   }
 
   return (
-    <>
+    <>{/* Header */}
       <Header currentMemberId={currentMemberId} setRefresh={setRefresh} setCurrentMemberId={setCurrentMemberId}/>
+      {/* Routes */}
       <Routes>
         <Route path="/" element={<FrontPage/>}/>
         <Route path="/tuotelista" element={<ProductList/>}/>
