@@ -1,6 +1,6 @@
 .manager-container {
   position: fixed;
-  top: 0;
+  top: 70px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -8,6 +8,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
 }
 
 .manager-options {
@@ -39,4 +40,5 @@
   flex-direction: column;
   margin-top:10px;
   margin-bottom:10px;
+  max-width: 200px;
 }
