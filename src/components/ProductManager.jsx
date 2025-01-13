@@ -108,7 +108,7 @@ const ProductManager = ({ token }) => {
     event.preventDefault()
     
     if (tuotteet.length >= 18) {
-      showInfo("Ei voi lisätä enempää tuotteita. Enimmäisraja, 18, on saavutettu.");
+      showInfo("Ei voi lisätä enempää tuotteita. Enimmäisraja, 18, on saavutettu.")
       return
     }
 

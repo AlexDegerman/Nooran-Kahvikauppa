@@ -49,10 +49,10 @@ const ProductList = () => {
   return (
     <div className="main-content">
       {!loading && products && Object.keys(products).length > 0 && (
-        <h1>{category}</h1>
+        <h1 className="main-title">{category}</h1>
       )}
       {/* Search bar */}
-      <Filter search={search} setSearch={setSearch} productCategory={productCategory} setProductCategory={setProductCategory} />
+      <Filter search={search} setSearch={setSearch} productCategory={productCategory} setProductCategory={setProductCategory} currentCategory={category}/>
       {/* Conditional renders */}
       {loading ? (
         <div className="loading">Ladataan tuotteita...</div>

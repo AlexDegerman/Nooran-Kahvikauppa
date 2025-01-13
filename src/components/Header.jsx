@@ -13,19 +13,21 @@ const Header = ({ setCurrentMemberId, currentMemberId }) => {
     if (category === 'Kahvilaitteet') {
       categoryId = 1
     }
-    if (category === 'Kulutuslaitteet') {
+    if (category === 'Kulutustuotteet') {
       categoryId = 2
     }
   
     navigate('/tuotelista', { state: { category, categoryId }})
   }
 
-  // Logs out user when clicking logout button
   const Logout = () => {
-    localStorage.removeItem('token')
     navigate('/')
-    showSuccess("Uloskirjautuminen onnistui!")
-    setCurrentMemberId(null)
+    
+    setTimeout(() => {
+      localStorage.removeItem('token')
+      showSuccess("Uloskirjautuminen onnistui!")
+      setCurrentMemberId(null)
+    }, 100)
   }
 
   return (
@@ -48,8 +50,8 @@ const Header = ({ setCurrentMemberId, currentMemberId }) => {
           Kahvilaitteet
         </button>
         <button className="header-nav header-nav-button"
-          onClick={() => handleClick('Kulutuslaitteet')}>
-          Kulutuslaitteet
+          onClick={() => handleClick('Kulutustuotteet')}>
+          Kulutustuotteet
         </button>
       </nav>
     </header>
