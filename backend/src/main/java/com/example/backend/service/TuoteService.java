@@ -18,7 +18,7 @@ import com.example.backend.repository.ValmistajaRepository;
 // Manages product-related operations including CRUD and search.
 @Service
 public class TuoteService {
-  
+
   @Autowired
   private TuoteRepository tuoteRepository;
     
@@ -51,6 +51,10 @@ public class TuoteService {
 
   // Add a new product
   public Tuote addTuote(TuoteDTO tuoteDTO) {
+    long currentProductCount = tuoteRepository.count();
+    if (currentProductCount >= 18) {
+      throw new RuntimeException("Cannot add more products. Maximum limit of 18 has been reached.");
+    }
     Tuote tuote = new Tuote();
     tuote.setNimi(tuoteDTO.getNimi());
     tuote.setKuvaus(tuoteDTO.getKuvaus());

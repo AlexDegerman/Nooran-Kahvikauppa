@@ -106,6 +106,12 @@ const ProductManager = ({ token }) => {
   // Add a new product
   const addProduct = async (event) => {
     event.preventDefault()
+    
+    if (tuotteet.length >= 18) {
+      showInfo("Ei voi lisätä enempää tuotteita. Enimmäisraja, 18, on saavutettu.");
+      return
+    }
+
     const newProduct = {
       ...product,
       hinta: product.hinta.replace(',', '.')
